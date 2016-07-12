@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+    <security:global-method-security secured-annotations="enabled" />
+    
+    <bean id="dataSource" 
+	      class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	      	<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+	      	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	      	<property name="username" value="graffiti"/>
+	      	<property name="password" value="graffiti_123"/>
+	   </bean>
+    
+    <security:http auto-config="true">
+        <!-- Restrict URLs based on role -->
+        <security:intercept-url pattern="/**" access="permitAll or hasRole('USER') or hasRole('ADMIN')" />
+        
+        <security:intercept-url pattern="/flows/createItem" access="permitAll" method="POST" />
+        
+        <!-- Override default login and logout pages -->
+        <security:form-login login-page="/index" 
+        					 username-parameter="username"
+        					 password-parameter="password"
+                             default-target-url="/activities" 
+                             authentication-failure-url="/index?loginerror=1" />
+        <security:logout logout-url="/logout" logout-success-url="/index" />
+        
+         <security:csrf disabled="true"/>
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider >
+            
+            <security:jdbc-user-service data-source-ref="dataSource" users-by-username-query="select username,password,active from profile where username=?" authorities-by-username-query="SELECT a.USERNAME,b.ROLENAME FROM PROFILE a , PROFILEROLE b where a.ROLE = b.ROLE and a.USERNAME=?" />
+            
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>
