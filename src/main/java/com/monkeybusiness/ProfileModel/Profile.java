@@ -103,6 +103,7 @@ public class Profile
 		ID = iD;
 	}
 	
+	@Length(max=255,message="Email: Maximum length allowed is 255 characters.")
 	@NotEmpty(message="Email field is mandatory.")
     @Email
 	public String getEmail() {
@@ -111,6 +112,8 @@ public class Profile
 	public void setEmail(String email) {
 		Email = email;
 	}
+	
+	@Length(max=255,message="Username: Maximum length allowed is 255 characters.")
 	@NotEmpty(message="Username field is mandatory.")
 	public String getUsername() {
 		return Username;
@@ -191,8 +194,8 @@ public class Profile
 	}
 	@Override
 	public String toString() {
-		return "{ID:\"" + ID + "\", Email:\"" + Email + "\", Username:\"" + Username + "\", Password:\"" + Password
-				+ "\", CPassword:\"" + CPassword + "\", Phone:\"" + Phone + "\", Location:\"" + Location + "\", FriendList:\""
+		return "{ID:\"" + ID + "\", Email:\"" + Email + "\", Username:\"" + Username + "\","
+				+ "Phone:\"" + Phone + "\", Location:\"" + Location + "\", FriendList:\""
 				+ FriendList + "\", Blogs:\"" + Blogs + "\", Forums:\"" + Forums + "\", ChatHistory:\"" + ChatHistory
 				+ "\", Notifications:\"" + Notifications + "\", LoginStatus:\"" + LoginStatus + "\", BasicInfo:\"" + BasicInfo
 				+ "\", Role:\"" + Role + "\", Active:\"" + Active + "\" , Image:\"" + Image + "\" , Gender:\"" + Gender + "\" }";

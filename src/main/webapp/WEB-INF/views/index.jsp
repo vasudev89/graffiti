@@ -12,7 +12,7 @@
 <head>
 	<c:import url="head-meta.jsp"></c:import>	
 </head>
-<body onload='onLoad()'>
+<body onload='resizing();onLoad()'>
 
 	<c:import url="head.jsp"></c:import>
 
@@ -43,16 +43,7 @@
 			</div>
 		</div>
 		
-		<script type="text/javascript">
-				
-			document.getElementById("body_div").style.height = (document.getElementById("index_div_row").offsetHeight + 120) + 'px';
-				
-			window.addEventListener('resize', function()
-			{
-				document.getElementById("body_div").style.height = (document.getElementById("index_div_row").offsetHeight + 120) + 'px';
-			}, false);
-				
-		</script>
+		<script type="text/javascript" src="resources/references/js/resizebody.js"></script>
 			
 	
 	</div>

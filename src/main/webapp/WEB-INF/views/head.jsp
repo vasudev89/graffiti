@@ -5,7 +5,7 @@
 
 	<sec:authentication var="user" property="principal" />
 	
-	<div class="Underline">
+	<div class="Underline" id="HeaderDiv">
 		<span class="Underline-Text">Graffiti&nbsp;&nbsp;&nbsp;</span>
 	</div>
 	

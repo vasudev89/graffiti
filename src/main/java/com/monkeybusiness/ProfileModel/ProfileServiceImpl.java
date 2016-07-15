@@ -28,8 +28,8 @@ public class ProfileServiceImpl implements ProfileService
 	}
 
 	@Transactional
-	public Profile getProfile(String pemail) {
-		return pdao.getProfile(pemail);
+	public Profile getProfile(String pusername) {
+		return pdao.getProfile(pusername);
 	}
 
 	@Transactional

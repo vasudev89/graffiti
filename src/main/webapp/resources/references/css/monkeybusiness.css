@@ -4,6 +4,11 @@
 	width: 95%;
 }
 
+.table-text-center
+{
+	text-align: center;
+}
+
 body
 {
 	background-color:#444444;
@@ -146,17 +151,20 @@ footer
 {
 	font: bold normal 18px/50px Calibri, sans-serif;
 	color: #666666;
+	
+	margin: auto;
+	width: 80%;
 }
 
 .select-menu
 {
 	-webkit-appearance: none;
-   -moz-appearance: none;
-   appearance: none;
-   -webkit-border-radius: 5px;
-   outline: 1px solid #CCCCCC;
-   border: 0px solid #000000;
-   border-radius: 5px;
+   	-moz-appearance: none;
+   	appearance: none;
+   	-webkit-border-radius: 5px;
+   	outline: 1px solid #CCCCCC;
+   	border: 0px solid #000000;
+   	border-radius: 5px;
    
 }
 
@@ -165,4 +173,19 @@ footer
 	margin: auto;
 	border: 0px solid #73AD21;
 	
+}
+
+textarea
+{
+	resize: none;
+}
+
+button
+{
+	outline: none;
+}
+
+.profile-img
+{
+    max-width:50%;
 }
