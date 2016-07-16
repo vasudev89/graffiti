@@ -23,6 +23,47 @@
 	var myApp = angular.module("myApp",[]);
 	
 ///////////////////////////////////////
+
+	myApp.directive('fileModel', ['$parse', function ($parse) {
+	    return {
+	        restrict: 'A',
+	        link: function(scope, element, attrs) {
+	            var model = $parse(attrs.fileModel);
+	            var modelSetter = model.assign;
+	            
+	            element.bind('change', function(){
+	                scope.$apply(function(){
+	                    modelSetter(scope, element[0].files[0]);
+	                });
+	            });
+	        }
+	    };
+	}]);
+
+///////////////////////////////////////
+
+	myApp.service('fileUpload', ['$http', function ($http) {
+	    this.uploadFileToUrl = function(file, paramuser, uploadUrl){
+	        var fd = new FormData();
+	        fd.append('file', file);
+	        //fd.append('user','vasudev89');
+	        return $http.post(uploadUrl, fd, {
+	            transformRequest: angular.identity,
+	            headers: {'Content-Type': undefined , user: paramuser}
+	        })
+	        .then(
+                    function(response){
+                        return response.data;
+                    }, 
+                    function(errResponse){
+                        console.error('Error while updating User');
+                        return "error";
+                    }
+            );
+	    }
+	}]);
+	
+///////////////////////////////////////
 	
 	myApp.factory('UserService', ['$http', '$q', function($http, $q){
 	 
@@ -38,10 +79,23 @@
                                         return $q.reject(errResponse);
                                     }
                             );
-            		}
+            		
     		}
     		,
-            {
+    		deleteUserImage: function(item){
+	                return $http.post('http://localhost:9002/monkeybusiness/deleteUserImage/', item)
+	                        .then(
+	                                function(response){
+	                                    return response.data;
+	                                }, 
+	                                function(errResponse){
+	                                    console.error('Error while updating User');
+	                                    return $q.reject(errResponse);
+	                                }
+	                        );
+	        		
+			}
+			,
          		updateUserPassword: function(item){
                     return $http.post('http://localhost:9002/monkeybusiness/updateUserPassword/', item)
                             .then(
@@ -60,10 +114,12 @@
 
 //////////////////////////////////////////////////
 	
-	myApp.controller("myCtrl",['$scope', 'UserService' ,function($scope , $UserService){
+	myApp.controller("myCtrl",['$scope', 'UserService' , 'fileUpload' ,function($scope , $UserService , $fileUpload){
 		
 		$scope.data = ${dataValue};
 		$scope.resetdata = ${dataValue};
+		
+		$scope.currentImage = $scope.data.Image;
 		
 		$scope.UserData = 	{ 
 								Email: $scope.data.Email ,
@@ -264,7 +320,7 @@
 				
 				var resp = $UserService.updateUserDetails($scope.UserData)
 	            .then(
-	            		function()
+	            		function(response)
 	            		{
 	            			$scope.progressObj.SwitchFlag(false);
 		    				$scope.stateDisabled = false;
@@ -276,6 +332,10 @@
 		    				$scope.resetdata.Phone = $scope.UserData.Phone;
 		    				$scope.resetdata.Location = $scope.UserData.Location;
 		    				$scope.resetdata.BasicInfo = $scope.UserData.BasicInfo;
+		    				
+		    				$scope.currentImage = response.imagesrc;
+		    				
+		    				document.getElementById("profilepic").src = $scope.currentImage;
 		    				
 		    				$scope.letItBe();
 	            		}
@@ -322,20 +382,154 @@
 			$('#trigger').trigger('click');
 		};
 		
+		$scope.picUpdated = false;
+		$scope.picUpdatedWithError = false;
+		$scope.invalidPicType = false;
+		
+		$scope.picDeleted = false;
+		
+		$scope.DeletePic = function()
+		{
+			$scope.progressObj.SwitchFlag(true);
+			$scope.stateDisabled = true;
+			
+			var resp = $UserService.deleteUserImage($scope.UserData)
+            .then(
+            		function(response)
+            		{
+            			$scope.progressObj.SwitchFlag(false);
+	    				$scope.stateDisabled = false;
+	    				
+	    				$scope.response = response.status;
+	    				$scope.imagesrc = response.imagesrc;
+	    				
+	    				if( $scope.response == "Updated" )
+            			{
+            				$scope.picDeleted = true;
+            				
+            				window.setTimeout(function()
+        		    		{
+        		    			$scope.$apply($scope.picDeleted = false);
+        		    		}, 5000);
+        		    		
+            				$scope.currentImage = $scope.imagesrc;
+            				
+            				document.getElementById("profilepic").src = $scope.currentImage;
+            			}
+            			else
+            			{
+							$scope.picUpdatedWithError = true;
+            				
+            				window.setTimeout(function()
+        		    		{
+        		    			$scope.$apply($scope.picUpdatedWithError = false);
+        		    		}, 5000);
+            				
+            				//console.log($scope.currentImage);
+            				
+            				document.getElementById("profilepic").src = $scope.currentImage;
+            			}
+            		}
+	            , 
+	                function(errResponse)
+	                {
+	                	console.error('Error while Updating User.');
+	                } 
+        	);
+		}
+		
 		$scope.setFile = function(element)
 		{
   			$scope.currentFile = element.files[0];
-   			var reader = new FileReader();
-
-  			reader.onload = function(event)
-			{
-    			$scope.data.Image = event.target.result
-    			$scope.$apply()
-
-  			};
-  			// when the file is read it triggers the onload event above.
-  			reader.readAsDataURL(element.files[0]);
+   			
   			
+			/*
+			if (file.type.match('image.*')) {
+			    console.log("is an image");
+			    console.log("Show type of image: ", file.type.split("/")[1]);
+			} */  
+			
+			var extension = $scope.currentFile.name.substring($scope.currentFile.name.lastIndexOf('.'));
+			
+			var validFileType = ".jpg";
+		    if (validFileType.toLowerCase().indexOf(extension) < 0) {
+		    	$scope.invalidPicType = true;
+				
+				window.setTimeout(function()
+	    		{
+	    			$scope.$apply($scope.invalidPicType = false);
+	    		}, 5000);
+		    }
+		    else
+		    {
+		    	var reader = new FileReader();
+
+	  			reader.onload = function(event)
+				{
+	    			$scope.data.Image = event.target.result
+	    			$scope.$apply()
+
+	  			};
+	  			// when the file is read it triggers the onload event above.
+	  			reader.readAsDataURL(element.files[0]);
+	  			
+	  			$scope.progressObj.SwitchFlag(true);
+				$scope.stateDisabled = true;
+		    	//
+		    	var file = $scope.currentFile;
+	  	        console.log('file is ' );
+	  	        console.dir(file);
+	  	        var uploadUrl = "http://localhost:9002/monkeybusiness/updateProfilePicture/";
+	  	        var res = $fileUpload.uploadFileToUrl(file, $scope.data.Username ,uploadUrl).then(
+	            		function(response)
+	            		{
+	            			$scope.response = response.status;
+	            			$scope.imagesrc = response.imagesrc;
+	            			
+	            			//console.log( $scope.response );
+	            			//console.log( $scope.imagesrc );
+	            			
+	            			if( $scope.response == "Uploaded" )
+	            			{
+	            				$scope.picUpdated = true;
+	            				
+	            				window.setTimeout(function()
+	        		    		{
+	        		    			$scope.$apply($scope.picUpdated = false);
+	        		    		}, 5000);
+	        		    		
+	            				$scope.currentImage = $scope.imagesrc;
+	            			}
+	            			else
+	            			{
+								$scope.picUpdatedWithError = true;
+	            				
+	            				window.setTimeout(function()
+	        		    		{
+	        		    			$scope.$apply($scope.picUpdatedWithError = false);
+	        		    		}, 5000);
+	            				
+	            				//console.log($scope.currentImage);
+	            				
+	            				document.getElementById("profilepic").src = $scope.currentImage;
+	            			}
+	            			
+	            			$scope.progressObj.SwitchFlag(false);
+		    				$scope.stateDisabled = false;
+		    				
+		    				
+	            		}
+		            , 
+		                function(errResponse)
+		                {
+		                	console.error('Error while Updating User.');
+		                } 
+	        	);
+	  			
+	  	        //console.log(res);
+		    	//
+		    }
+			
   			$scope.UpdatePageSize();
 		};
 		
@@ -379,6 +573,46 @@
 			
 				<table class="table center myprofile">
 				
+					<tr ng-show="picUpdated">
+						
+						<td colspan="2">
+							
+								<span class="text-success bg-success error-font" >Profile Picture Updated Successfully</span>
+							
+						</td>
+						
+					</tr>
+					
+					<tr ng-show="picDeleted">
+						
+						<td colspan="2">
+							
+								<span class="text-success bg-success error-font" >Profile Picture Deleted Successfully</span>
+							
+						</td>
+						
+					</tr>
+					
+					<tr ng-show="picUpdatedWithError">
+						
+						<td colspan="2">
+							
+								<span class="text-danger bg-danger error-font">Profile Picture Update Failure</span>
+							
+						</td>
+						
+					</tr>
+					
+					<tr ng-show="invalidPicType">
+						
+						<td colspan="2">
+							
+								<span class="text-danger bg-danger error-font">Invalid Profile Picture Type: Only jpeg files allowed</span>
+							
+						</td>
+						
+					</tr>
+				
 					<tr ng-show="updated">
 						
 						<td colspan="2">
@@ -392,10 +626,13 @@
 					<tr>
 						
 						<td colspan="2">
+							
 								<button type="button" class="btn btn-link" ng-click="openFileChooser();" ng-disabled="stateDisabled">Change Picture</button>
+								
 								<br>
-								<img ng-src="{{data.Image}}" class="img-responsive center_img profile-img"></img>
-								<input type="file" id="trigger" ng-show="false" onchange="angular.element(this).scope().setFile(this)" accept="image/*">
+								<img name="ProfilePicture" ng-src="{{data.Image}}" class="img-responsive center_img profile-img" id="profilepic"></img>
+								<input type="file" id="trigger" ng-show="false" onchange="angular.element(this).scope().setFile(this)" accept="image/*" file-model="myFile"/>
+								<button type="button" class="btn btn-danger" ng-click="DeletePic();" ng-disabled="stateDisabled">Delete Picture</button>
 							<br>
 						</td>
 						

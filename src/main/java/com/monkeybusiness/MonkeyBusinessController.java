@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.monkeybusiness.Hash.HashManager;
 import com.monkeybusiness.ProfileModel.Profile;
 import com.monkeybusiness.ProfileModel.ProfileService;
 import com.monkeybusiness.ProfileRole.ProfileRoleService;
@@ -60,6 +61,12 @@ public class MonkeyBusinessController {
 	@RequestMapping(value="/aboutus" , method = RequestMethod.GET)
 	public ModelAndView aboutus(HttpServletRequest request) throws IOException{
 		ModelAndView mav = new ModelAndView("aboutus");
+		return mav;
+	}
+	
+	@RequestMapping(value="/blog" , method = RequestMethod.GET)
+	public ModelAndView blog(HttpServletRequest request) throws IOException{
+		ModelAndView mav = new ModelAndView("blog");
 		return mav;
 	}
 	
@@ -169,6 +176,8 @@ public class MonkeyBusinessController {
 					{
 						p.setImage("resources/images/profilepic_female.jpg");
 					}
+					
+					//p.setPassword( HashManager.generateHashCode( p.getPassword() ));
 					
 					ps.insertProfile(p);
 					

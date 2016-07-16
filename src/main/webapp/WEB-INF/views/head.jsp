@@ -26,6 +26,7 @@
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/activities">${pageContext.request.userPrincipal.name}</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/profile">Profile</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/friends">Friends</a></li>
+				<li><a class="navigation-element" href="${pageContext.request.contextPath}/blog">Blog</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/ulogout">Log Out</a></li>
 				
 			</c:otherwise>
