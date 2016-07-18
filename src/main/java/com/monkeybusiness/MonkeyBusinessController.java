@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -64,25 +65,67 @@ public class MonkeyBusinessController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/blog" , method = RequestMethod.GET)
-	public ModelAndView blog(HttpServletRequest request) throws IOException{
-		ModelAndView mav = new ModelAndView("blog");
+	@RequestMapping(value="/profile/{userName}" , method = RequestMethod.GET)
+	public ModelAndView profile(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
+		ModelAndView mav = new ModelAndView("profile");
+		
+		Profile p = ps.getProfile(username);
+	    	
+	    mav.addObject("dataValue", p);
+	    mav.addObject("userName", username);
+	    
 		return mav;
 	}
 	
-	@RequestMapping(value="/profile" , method = RequestMethod.GET)
-	public ModelAndView profile(HttpServletRequest request) throws IOException{
-		ModelAndView mav = new ModelAndView("profile");
+	@RequestMapping(value="/forum/{userName}" , method = RequestMethod.GET)
+	public ModelAndView forum(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
+		ModelAndView mav = new ModelAndView("forum");
 		
+		Profile p = ps.getProfile(username);
+	    
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if (auth != null && !( auth.getName()==null) )
-	    {    
-	    	Profile p = ps.getProfile(auth.getName());
-	    	
-	    	mav.addObject("dataValue", p);
+	    {   
+			if( auth.getName().equals(username) )
+			{
+				mav.addObject("dataValue", (p == null)?null:p.getForums());
+			}
+			else
+			{
+				String temp = p.getFriendList();
+				
+				if( temp.contains(username) )
+				{
+					mav.addObject("dataValue", (p == null)?null:p.getForums());
+				}
+				else
+				{
+					mav.addObject("invalidUser", "invalidUser");
+				}
+			}
+			
 	    }
+	    
+	    System.out.println(username);
+	    
+	    mav.addObject("userName", username);
+	    
+		return mav;
+	}
+	
+	@RequestMapping(value="/blog/{userName}" , method = RequestMethod.GET)
+	public ModelAndView blog(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
+		ModelAndView mav = new ModelAndView("blog");
 		
+		Profile p = ps.getProfile(username);
+	    
+		mav.addObject("dataValue", (p == null)?null:p.getBlogs());
+	    
+	    System.out.println(username);
+	    
+	    mav.addObject("userName", username);
+	    
 		return mav;
 	}
 	

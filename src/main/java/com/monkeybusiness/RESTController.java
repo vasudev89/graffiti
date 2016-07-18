@@ -78,6 +78,16 @@ public class RESTController
 		
 		Profile p = ps.getProfile(data.get("Username").toString());
 		
+		String imagename = p.getImage();
+		
+		String path = context.getRealPath("/");
+        
+        System.out.println(path);
+        
+        File directory = new File(path + imagename);
+		
+        directory.delete();
+        
 		p.setImage( p.getGender().equals("Male")  ? "resources/images/profilepic_male.jpg" : "resources/images/profilepic_female.jpg" );
 		
 		ps.updateProfile(p);
@@ -200,6 +210,48 @@ public class RESTController
 	    }
 		
 		System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/updateUserBlog/", method = RequestMethod.POST)
+    public ResponseEntity<String> updateUserBlog(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("Username"));
+		
+		Profile p = ps.getProfile(data.get("Username").toString());
+		
+		p.setBlogs(data.toJSONString());
+		
+		ps.updateProfile(p);
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Updated");
+		
+        System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/updateUserForum/", method = RequestMethod.POST)
+    public ResponseEntity<String> updateUserForum(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("Username"));
+		
+		Profile p = ps.getProfile(data.get("Username").toString());
+		
+		p.setForums(data.toJSONString());
+		
+		ps.updateProfile(p);
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Updated");
+		
+        System.out.println(json.toString());
         
         return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
     }

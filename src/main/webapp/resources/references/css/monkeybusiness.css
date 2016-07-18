@@ -189,3 +189,81 @@ button
 {
     max-width:50%;
 }
+
+.blog-posts
+{
+	border-top: 1px solid rgb(128,128,0);
+	border-bottom: 1px solid rgb(128,128,0);
+	
+	font: 20px Calibri;
+	font-variant: small-caps;
+	font-style: oblique;
+	
+	color: rgba(28,81,123,0.8); 
+	text-align: left; 
+	padding: 15px; "
+}
+
+.blog-posts-nopost
+{
+	//border-top: 1px solid rgb(128,128,0);
+	border-bottom: 1px solid rgb(128,0,0);
+	
+	font: 18px Calibri;
+	font-variant: small-caps;
+	font-style: oblique;
+	
+	color: rgba(28,81,123,0.8);
+	background-color: rgba(228,281,223,0.8); 
+	text-align: left; 
+	padding: 15px; "
+}
+
+.blog-post-handle
+{
+	color: #333333;
+	padding: 15px;
+	font-size: 18px; 
+	font-variant: normal; 
+	font-style: oblique;
+	
+	background-color: rgba(228,281,223,0.8);
+}
+
+.blog-post-other
+{
+	color: #333333;
+	font-variant: normal; 
+	font-style: normal;
+	font: 17px Calibri;
+}
+
+.blog-post-comment
+{
+	color: #333333;
+	font-variant: normal; 
+	font-style: normal;
+	font: 15px Calibri;
+}
+
+.profile-list-group-item
+{
+	background-color: #AAAAAAA;
+	color: #333333;
+	
+	font: 18px Calibri;
+	font-variant: small-caps;
+	font-style: oblique;
+	font-weight: bold;
+	
+	list-style: none;
+	
+	padding-left: 15px;
+}
+
+.profile-list-group-item:hover
+{
+	background-color: #CCCCCC;
+	color: #000000;
+	
+}

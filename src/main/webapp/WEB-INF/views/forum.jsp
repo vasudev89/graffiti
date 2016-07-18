@@ -26,8 +26,8 @@
 	myApp.factory('UserService', ['$http', '$q', function($http, $q){
 	 
     return {
-         		updateUserBlog: function(item){
-                    return $http.post('http://localhost:9002/monkeybusiness/updateUserBlog/', item)
+         		updateUserForum: function(item){
+                    return $http.post('http://localhost:9002/monkeybusiness/updateUserForum/', item)
                             .then(
                                     function(response){
                                         return response.data;
@@ -70,7 +70,7 @@
 			$scope.data =
 						{
 							Username:"${userName}",
-							Blogs:
+							Forums:
 								[
 				               		
 				              	]
@@ -84,17 +84,17 @@
 			
 			$scope.RefurbishLikes = function(input)
 			{
-				for( i = 0 ; i < $scope.data.Blogs.length ; i++ )
+				for( i = 0 ; i < $scope.data.Forums.length ; i++ )
 				{
-					/* console.log($scope.data.Blogs[i].Likes);
-					console.log($scope.data.Blogs[i].Likes.indexOf(input));
+					/* console.log($scope.data.Forums[i].Likes);
+					console.log($scope.data.Forums[i].Likes.indexOf(input));
 					console.log(input);
 					
-					console.log($scope.data.Blogs[i].LikeStatus);
+					console.log($scope.data.Forums[i].LikeStatus);
 					 */
-					$scope.data.Blogs[i].LikeStatus = ( $scope.data.Blogs[i].Likes.indexOf(input) == -1 )? true:false;
+					$scope.data.Forums[i].LikeStatus = ( $scope.data.Forums[i].Likes.indexOf(input) == -1 )? true:false;
 					
-					/* console.log($scope.data.Blogs[i].LikeStatus); */
+					/* console.log($scope.data.Forums[i].LikeStatus); */
 				}
 			}
 			
@@ -127,11 +127,11 @@
 		{
 			//console.log( $scope.postText );
 			
-			//console.log( $scope.data.Blogs.length );
+			//console.log( $scope.data.Forums.length );
 			
-			blogItem = 
+			ForumItem = 
 						{
-		        	   		PostID:$scope.data.Blogs.length + 1,
+		        	   		PostID:$scope.data.Forums.length + 1,
 		        	   		Post: $scope.postText,
 		        	   		show: true,
 		        	   		editStatus: true,
@@ -140,9 +140,9 @@
 		        	   		Comments : []
 		           		};
 			
-			$scope.data.Blogs.unshift(blogItem);
+			$scope.data.Forums.unshift(ForumItem);
 			
-			$scope.sendBlogUpdate();
+			$scope.sendForumUpdate();
 			
 			$scope.UpdatePageSize();			
 		}
@@ -151,17 +151,17 @@
 		{
 			//console.log( $scope.postText );
 			
-			//console.log( $scope.data.Blogs.length );
+			//console.log( $scope.data.Forums.length );
 			
-			for( i = 0 ; i < $scope.data.Blogs.length ; i++ )
+			for( i = 0 ; i < $scope.data.Forums.length ; i++ )
 			{
-				if( $scope.data.Blogs[i].PostID == input )
+				if( $scope.data.Forums[i].PostID == input )
 				{
-					$scope.data.Blogs[i].show = !$scope.data.Blogs[i].show;
-					$scope.data.Blogs[i].editStatus = !$scope.data.Blogs[i].editStatus;
+					$scope.data.Forums[i].show = !$scope.data.Forums[i].show;
+					$scope.data.Forums[i].editStatus = !$scope.data.Forums[i].editStatus;
 					
-					if( $scope.data.Blogs[i].editStatus == true )
-						$scope.sendBlogUpdate();
+					if( $scope.data.Forums[i].editStatus == true )
+						$scope.sendForumUpdate();
 				}
 			}
 			
@@ -172,17 +172,17 @@
 		
 		$scope.AddComment = function(input,comment)
 		{
-			for( i = 0 ; i < $scope.data.Blogs.length ; i++ )
+			for( i = 0 ; i < $scope.data.Forums.length ; i++ )
 			{
-				if( $scope.data.Blogs[i].PostID == input )
+				if( $scope.data.Forums[i].PostID == input )
 				{
-					item = {Index: $scope.data.Blogs[i].Comments.length + 1 ,By: $scope.currentUser, Comment: comment, show: true , editStatus: true };
+					item = {Index: $scope.data.Forums[i].Comments.length + 1 ,By: $scope.currentUser, Comment: comment, show: true , editStatus: true };
 					
-					$scope.data.Blogs[i].Comments.push( item );
+					$scope.data.Forums[i].Comments.push( item );
 				}
 			}
 			
-			$scope.sendBlogUpdate();
+			$scope.sendForumUpdate();
 			$scope.UpdatePageSize();
 		}
 		
@@ -191,13 +191,13 @@
 			mark_i = -1;
 			mark_j = -1;
 			
-			l: for( i = 0 ; i < $scope.data.Blogs.length ; i++ )
+			l: for( i = 0 ; i < $scope.data.Forums.length ; i++ )
 			{
-				if( $scope.data.Blogs[i].PostID == input )
+				if( $scope.data.Forums[i].PostID == input )
 				{
-					for( j = 0 ; j < $scope.data.Blogs[i].Comments.length ; j++ )
+					for( j = 0 ; j < $scope.data.Forums[i].Comments.length ; j++ )
 					{
-						if( $scope.data.Blogs[i].Comments[j].Index == Index )
+						if( $scope.data.Forums[i].Comments[j].Index == Index )
 						{
 							mark_i = i;
 							mark_j = j;
@@ -210,9 +210,9 @@
 			
 			if( mark_i != -1 && mark_j != -1 )
 			{
-				$scope.data.Blogs[mark_i].Comments.splice( mark_j , 1 );
+				$scope.data.Forums[mark_i].Comments.splice( mark_j , 1 );
 				
-				$scope.sendBlogUpdate();
+				$scope.sendForumUpdate();
 			}
 			
 			$scope.UpdatePageSize();
@@ -223,13 +223,13 @@
 			mark_i = -1;
 			mark_j = -1;
 			
-			l: for( i = 0 ; i < $scope.data.Blogs.length ; i++ )
+			l: for( i = 0 ; i < $scope.data.Forums.length ; i++ )
 			{
-				if( $scope.data.Blogs[i].PostID == input )
+				if( $scope.data.Forums[i].PostID == input )
 				{
-					for( j = 0 ; j < $scope.data.Blogs[i].Comments.length ; j++ )
+					for( j = 0 ; j < $scope.data.Forums[i].Comments.length ; j++ )
 					{
-						if( $scope.data.Blogs[i].Comments[j].Index == Index )
+						if( $scope.data.Forums[i].Comments[j].Index == Index )
 						{
 							mark_i = i;
 							mark_j = j;
@@ -244,9 +244,9 @@
 			
 			if( mark_i != -1 && mark_j != -1 )
 			{
-				$scope.data.Blogs[mark_i].Comments[mark_j].show = !$scope.data.Blogs[mark_i].Comments[mark_j].show;
-				$scope.data.Blogs[mark_i].Comments[mark_j].editStatus = !$scope.data.Blogs[mark_i].Comments[mark_j].editStatus;
-				$scope.sendBlogUpdate();
+				$scope.data.Forums[mark_i].Comments[mark_j].show = !$scope.data.Forums[mark_i].Comments[mark_j].show;
+				$scope.data.Forums[mark_i].Comments[mark_j].editStatus = !$scope.data.Forums[mark_i].Comments[mark_j].editStatus;
+				$scope.sendForumUpdate();
 			}
 			
 			$scope.UpdatePageSize();
@@ -256,9 +256,9 @@
 		{
 			mark_i = -1;
 			
-			l: for( i = 0 ; i < $scope.data.Blogs.length ; i++ )
+			l: for( i = 0 ; i < $scope.data.Forums.length ; i++ )
 			{
-				if( $scope.data.Blogs[i].PostID == input )
+				if( $scope.data.Forums[i].PostID == input )
 				{
 					mark_i = i;
 					break l;					
@@ -267,8 +267,8 @@
 			
 			if( mark_i != -1 )
 			{
-				$scope.data.Blogs.splice( mark_i , 1 );
-				$scope.sendBlogUpdate();
+				$scope.data.Forums.splice( mark_i , 1 );
+				$scope.sendForumUpdate();
 			}
 			
 			$scope.UpdatePageSize();
@@ -276,37 +276,37 @@
 		
 		$scope.AddLike = function(input)
 		{
-			for( i = 0 ; i < $scope.data.Blogs.length ; i++ )
+			for( i = 0 ; i < $scope.data.Forums.length ; i++ )
 			{
-				if( $scope.data.Blogs[i].PostID == input )
+				if( $scope.data.Forums[i].PostID == input )
 				{
-					if($scope.data.Blogs[i].LikeStatus == true)
+					if($scope.data.Forums[i].LikeStatus == true)
 					{
-						if( $scope.data.Blogs[i].Likes.indexOf($scope.currentUser) == -1 )
+						if( $scope.data.Forums[i].Likes.indexOf($scope.currentUser) == -1 )
 						{
-							$scope.data.Blogs[i].Likes.push( $scope.currentUser );
-							$scope.data.Blogs[i].LikeStatus = ! $scope.data.Blogs[i].LikeStatus;
+							$scope.data.Forums[i].Likes.push( $scope.currentUser );
+							$scope.data.Forums[i].LikeStatus = ! $scope.data.Forums[i].LikeStatus;
 						}
 					}
 					else
 					{
-						$scope.data.Blogs[i].Likes.splice( $scope.data.Blogs[i].Likes.indexOf($scope.currentUser) , 1 );
-						$scope.data.Blogs[i].LikeStatus = ! $scope.data.Blogs[i].LikeStatus;
+						$scope.data.Forums[i].Likes.splice( $scope.data.Forums[i].Likes.indexOf($scope.currentUser) , 1 );
+						$scope.data.Forums[i].LikeStatus = ! $scope.data.Forums[i].LikeStatus;
 					}					
 				}
 			}
 			
 			//$scope.GenerateLikes();
-			$scope.sendBlogUpdate();
+			$scope.sendForumUpdate();
 			$scope.UpdatePageSize();
 		}
 		
-		$scope.sendBlogUpdate = function()
+		$scope.sendForumUpdate = function()
 		{
 			$scope.progressObj.SwitchFlag(true);
 			$scope.stateDisabled = true;
 			
-			var resp = $UserService.updateUserBlog($scope.data)
+			var resp = $UserService.updateUserForum($scope.data)
             .then(
             		function(response)
             		{
@@ -350,18 +350,21 @@
 	<div class="body" id="body_div">
 	
 			<div class="container center" id="index_div_row">
+			
+			<c:if test="${empty invalidUser}">
+			<!--  -->
 				
 				<br>
 				
 				<div class="row" ng-show="(currentUser == data.Username)">
 					<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
-						My Blogs
+						My Forums
 					</div>
 				</div>
 				
 				<div class="row" ng-show="!(currentUser == data.Username)">
 					<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
-						Blogs : {{data.Username}}
+						Forums : {{data.Username}}
 					</div>
 				</div>
 				
@@ -399,13 +402,13 @@
 							
 						</tr>
 						
-						<tr ng-show="data.Blogs.length == 0">
+						<tr ng-show="data.Forums.length == 0">
 							
 							<td colspan="2">
 								
 								<div class="blog-posts-nopost" style="text-align: center;">
 				
-									<label>No Blogs Posted yet.</label>
+									<label>No Forums Posted yet.</label>
 									
 								</div>
 								
@@ -420,7 +423,7 @@
 				</div>
 			
 				
-				<div class="row" ng-repeat="x in data.Blogs">
+				<div class="row" ng-repeat="x in data.Forums">
 					<div class="col-lg-12">
 						<div class="blog-posts center">
 							
@@ -480,10 +483,39 @@
 			
 		</div>
 		
-		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/resizebody.js"></script>
+		
 			
 	
 		</div>
+		<!--  -->
+		</c:if>
+		
+		<c:if test="${not empty invalidUser}">
+		
+			<br>
+			<br>
+		
+			<table class="table center myprofile">
+						
+						<tr>
+							
+							<td colspan="2">
+								
+								<div class="blog-posts-nopost" style="text-align: center;">
+				
+									<label>Restricted Group. Please add a friend request to gain access</label>
+									
+								</div>
+								
+							</td>
+							
+						</tr>
+						
+					</table>
+		
+		</c:if>
+		
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/resizebody.js"></script>
 	</div>
 	</div>
 </body>

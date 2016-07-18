@@ -46,9 +46,9 @@ public class Profile
 	@Lob
 	private String FriendList = "[]";
 	@Lob
-	private String Blogs = "[]";
+	private String Blogs;
 	@Lob
-	private String Forums = "[]";
+	private String Forums;
 	@Lob
 	private String ChatHistory = "[]";
 	@Lob
@@ -195,9 +195,7 @@ public class Profile
 	@Override
 	public String toString() {
 		return "{ID:\"" + ID + "\", Email:\"" + Email + "\", Username:\"" + Username + "\","
-				+ "Phone:\"" + Phone + "\", Location:\"" + Location + "\", FriendList:\""
-				+ FriendList + "\", Blogs:\"" + Blogs + "\", Forums:\"" + Forums + "\", ChatHistory:\"" + ChatHistory
-				+ "\", Notifications:\"" + Notifications + "\", LoginStatus:\"" + LoginStatus + "\", BasicInfo:\"" + BasicInfo
+				+ "Phone:\"" + Phone + "\", Location:\"" + Location + "\", LoginStatus:\"" + LoginStatus + "\", BasicInfo:\"" + BasicInfo
 				+ "\", Role:\"" + Role + "\", Active:\"" + Active + "\" , Image:\"" + Image + "\" , Gender:\"" + Gender + "\" }";
 	}
 	

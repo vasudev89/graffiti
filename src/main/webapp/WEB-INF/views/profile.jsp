@@ -15,9 +15,9 @@
 
 <!--  -->
 
-<script type="text/javascript" src="resources/references/js/angular.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/angular.min.js"></script>
 
-<script type="text/javascript" src="resources/references/js/ProgressObject.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/ProgressObject.js"></script>
 
 <script type="text/javascript">
 	var myApp = angular.module("myApp",[]);
@@ -119,7 +119,19 @@
 		$scope.data = ${dataValue};
 		$scope.resetdata = ${dataValue};
 		
+		$scope.data.Image = '${pageContext.request.contextPath}/' + $scope.data.Image;
+		$scope.resetdata.Image = '${pageContext.request.contextPath}/' + $scope.resetdata.Image;
+		
 		$scope.currentImage = $scope.data.Image;
+		
+		$scope.currentUser = '${ pageContext.request.userPrincipal.name}';
+		
+		$scope.currentUserMatch = ( $scope.data.Username == $scope.currentUser );
+		
+		$scope.defaultPic = ( $scope.data.Image == '/monkeybusiness/resources/images/profilepic_male.jpg' || $scope.data.Image == '/monkeybusiness/resources/images/profilepic_female.jpg' );
+		
+		//console.log( $scope.data.Image );
+		//console.log( $scope.defaultPic );
 		
 		$scope.UserData = 	{ 
 								Email: $scope.data.Email ,
@@ -167,7 +179,9 @@
 		{
 			window.setTimeout(function()
 			{
-				document.getElementById("body_div").style.height = (document.getElementById("index_div_row").offsetHeight + 100) + 'px'; 
+				document.getElementById("body_div").style.height = (document.getElementById("index_div_row").offsetHeight + 100) + 'px';
+				
+				$('#body_div').height( $('#body_div').height()<$(window).height()? $(window).height() : $('#body_div').height() );
 			}, 200);
 		};
 		
@@ -333,9 +347,11 @@
 		    				$scope.resetdata.Location = $scope.UserData.Location;
 		    				$scope.resetdata.BasicInfo = $scope.UserData.BasicInfo;
 		    				
-		    				$scope.currentImage = response.imagesrc;
+		    				$scope.currentImage = '${pageContext.request.contextPath}/' + response.imagesrc;
 		    				
 		    				document.getElementById("profilepic").src = $scope.currentImage;
+		    				
+		    				$scope.defaultPic = ( $scope.currentImage == '/monkeybusiness/resources/images/profilepic_male.jpg' || $scope.currentImage == '/monkeybusiness/resources/images/profilepic_female.jpg' );
 		    				
 		    				$scope.letItBe();
 	            		}
@@ -363,6 +379,7 @@
     		}, 5000);
 			
 			$scope.data = $scope.resetdata;
+			
 			$scope.change = false;
 			document.getElementById('change_update_btn').innerHTML = "Change";
 			
@@ -412,7 +429,9 @@
         		    			$scope.$apply($scope.picDeleted = false);
         		    		}, 5000);
         		    		
-            				$scope.currentImage = $scope.imagesrc;
+            				$scope.currentImage = '${pageContext.request.contextPath}/' + $scope.imagesrc;
+            				
+            				$scope.defaultPic = ( $scope.currentImage == '/monkeybusiness/resources/images/profilepic_male.jpg' || $scope.currentImage == '/monkeybusiness/resources/images/profilepic_female.jpg' );
             				
             				document.getElementById("profilepic").src = $scope.currentImage;
             			}
@@ -498,7 +517,9 @@
 	        		    			$scope.$apply($scope.picUpdated = false);
 	        		    		}, 5000);
 	        		    		
-	            				$scope.currentImage = $scope.imagesrc;
+	            				$scope.currentImage = '${pageContext.request.contextPath}/' + $scope.imagesrc;
+	            				
+	            				$scope.defaultPic = ( $scope.currentImage == '/monkeybusiness/resources/images/profilepic_male.jpg' || $scope.currentImage == '/monkeybusiness/resources/images/profilepic_female.jpg' );
 	            			}
 	            			else
 	            			{
@@ -552,9 +573,15 @@
 			
 			<br>
 			
-			<div class="row">
+			<div class="row" ng-show="currentUserMatch">
 				<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
 					My Profile
+				</div>
+			</div>
+			
+			<div class="row" ng-show="!currentUserMatch">
+				<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
+					Profile : {{data.Username}}
 				</div>
 			</div>
 			
@@ -627,12 +654,14 @@
 						
 						<td colspan="2">
 							
-								<button type="button" class="btn btn-link" ng-click="openFileChooser();" ng-disabled="stateDisabled">Change Picture</button>
+								<button type="button" class="btn btn-link" ng-show="currentUserMatch" ng-click="openFileChooser();" ng-disabled="stateDisabled">Change Picture</button>
 								
 								<br>
 								<img name="ProfilePicture" ng-src="{{data.Image}}" class="img-responsive center_img profile-img" id="profilepic"></img>
+								<br>
 								<input type="file" id="trigger" ng-show="false" onchange="angular.element(this).scope().setFile(this)" accept="image/*" file-model="myFile"/>
-								<button type="button" class="btn btn-danger" ng-click="DeletePic();" ng-disabled="stateDisabled">Delete Picture</button>
+								<button type="button" class="btn btn-danger" ng-show="currentUserMatch" ng-click="DeletePic();" ng-disabled="stateDisabled || defaultPic">Delete Picture</button>
+								<br>
 							<br>
 						</td>
 						
@@ -652,7 +681,9 @@
 					
 					<tr>
 						<td>User Name:</td>
-						<td>{{data.Username}}</td>
+						<td>
+							<label>{{data.Username}}</label>							
+						</td>
 					</tr>
 					
 					<tr>
@@ -691,7 +722,7 @@
 						</td>
 					</tr>
 					
-					<tr>
+					<tr ng-show="currentUserMatch">
 						<td colspan="2" >
 							<div class="row">
 								<br>
@@ -716,13 +747,13 @@
 			
 			<br>
 			
-			<div class="row">
+			<div class="row" ng-show="currentUserMatch">
 				<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
 					Change Password
 				</div>
 			</div>
 			
-			<div class="row">
+			<div class="row" ng-show="currentUserMatch">
 			
 				<div class="col-lg-12">
 				
@@ -796,6 +827,21 @@
 						
 				</table>
 				
+				<br>
+				
+				<table style="width: 80%;" class="table">
+					
+					<tr>
+						<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
+							<a href="${pageContext.request.contextPath}/blog/${userName}" class="list-group-item profile-list-group-item"><li > Blogs</li></a>
+							<a href="${pageContext.request.contextPath}/forum/${userName}" class="list-group-item profile-list-group-item"><li> Forums</li></a>							
+						</ul>
+					</tr>
+									  	
+					<br>
+									  	
+				</table>
+				
 				<!--  -->
 				
 				</div>
@@ -808,7 +854,7 @@
 	
 	</div>
 	
-	<script type="text/javascript" src="resources/references/js/resizebody.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/resizebody.js"></script>
 	
 </body>
 </html>
