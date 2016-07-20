@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 import javax.sql.rowset.serial.SerialClob;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.Hibernate;
@@ -123,6 +124,7 @@ public class Profile
 	
 	@Length(max=255,message="Username: Maximum length allowed is 255 characters.")
 	@NotEmpty(message="Username field is mandatory.")
+	@Pattern(regexp="^[-_A-Za-z0-9\\s]+$",message="Special Characters not allowed.")
 	public String getUsername() {
 		return Username;
 	}

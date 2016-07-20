@@ -353,7 +353,25 @@
 		    				
 		    				$scope.defaultPic = ( $scope.currentImage == '/monkeybusiness/resources/images/profilepic_male.jpg' || $scope.currentImage == '/monkeybusiness/resources/images/profilepic_female.jpg' );
 		    				
-		    				$scope.letItBe();
+		    				//
+		    				window.setTimeout(function()
+		    			    		{
+		    							$scope.$apply($scope.updated = false);
+		    			    			
+		    			    			//console.log($scope.updated);
+		    			    		}, 5000);
+		    						
+		    						$scope.change = false;
+		    						document.getElementById('change_update_btn').innerHTML = "Change";
+		    						
+		    						$scope.progressObj.SwitchFlag(false);
+		    						$scope.stateDisabled = false;
+		    						
+		    						$scope.EmailError = false;
+		    						$scope.PhoneError = false;
+		    						
+		    						$scope.UpdatePageSize();
+		    					//
 	            		}
 		            , 
 		                function(errResponse)
