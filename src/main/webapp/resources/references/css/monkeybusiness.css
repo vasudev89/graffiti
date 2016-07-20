@@ -4,6 +4,12 @@
 	width: 95%;
 }
 
+.img-center
+{
+	margin: auto;
+	width: 75%;
+}
+
 .table-text-center
 {
 	text-align: center;
@@ -265,5 +271,44 @@ button
 {
 	background-color: #CCCCCC;
 	color: #000000;
+}
+
+.user-online
+{
+	background-color: rgb(128,128,0);
+	border-radius: 2px;
+	padding: 10px;
+	color: #FFFFFF;
 	
+	font: 16px Calibri;
+	font-variant: small-caps;
+	font-style: normal;
+	font-weight: normal;
+}
+
+.user-offline
+{
+	background-color: rgb(128,0,0);
+	border-radius: 2px;
+	padding: 10px;
+	color: #FFFFFF;
+	
+	font: 16px Calibri;
+	font-variant: small-caps;
+	font-style: normal;
+	font-weight: normal;
+}
+
+.search-text
+{
+	font: 16px Calibri;
+	font-variant: small-caps;
+	font-style: oblique;
+	font-weight: normal;
+}
+
+.link-disabled
+{
+	cursor: not-allowed;
+	pointer-events: none;
 }

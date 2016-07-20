@@ -105,13 +105,20 @@
 		$scope.updated = false;
 		
 		try{ $scope.data = JSON.parse('${dataValue}'); }
-		catch(e) { $scope.data = {}; }
+		catch(e) { $scope.data = []; }
 		
-		try{ $scope.AllUsers = JSON.parse('${AllUsers}'); }
-		catch(e) { $scope.AllUsers = {}; }
+		try{ $scope.AllFriends = JSON.parse('${AllFriends}'); }
+		catch(e) { $scope.AllFriends = []; }
 			
-		console.log( $scope.AllUsers );
+		//console.log( $scope.AllFriends );
+		
+		$scope.AllFriendsEmpty = ($scope.AllFriends.length == 0);
 	
+		try{ $scope.PendingFriends = JSON.parse('${PendingFriends}'); }
+		catch(e) { $scope.PendingFriends = []; }
+		
+		$scope.PendingFriendsEmpty = ($scope.PendingFriends.length == 0);
+		
 		$scope.AddFriend = function( currentUser , FriendName )
 		{
 			$scope.progressObj.SwitchFlag(true);
@@ -127,16 +134,25 @@
             			
             			if( $scope.response == "Updated" )
             			{
-            				for( i = 0 ; i < $scope.AllUsers.length ; i++ )
+            				for( i = 0 ; i < $scope.AllFriends.length ; i++ )
             				{
-            					if( $scope.AllUsers[i].Name == $scope.frequest.FriendName )
+            					if( $scope.AllFriends[i].Name == $scope.frequest.FriendName )
             					{
-            						$scope.AllUsers[i].IsFriend = "Friend Request Pending";
+            						$scope.AllFriends[i].IsFriend = "Friend Request Pending";
             						break;
             					}	
             				}
             				
-            				console.log( $scope.AllUsers );
+            				for( i = 0 ; i < $scope.PendingFriends.length ; i++ )
+            				{
+            					if( $scope.PendingFriends[i].Name == $scope.frequest.FriendName )
+            					{
+            						$scope.PendingFriends[i].IsFriend = "Friend Request Pending";
+            						break;
+            					}	
+            				}
+            				
+            				console.log( $scope.AllFriends );
             				
             				$scope.updated = true;
             				
@@ -177,16 +193,25 @@
             			
             			if( $scope.response == "Updated" )
             			{
-            				for( i = 0 ; i < $scope.AllUsers.length ; i++ )
+            				for( i = 0 ; i < $scope.AllFriends.length ; i++ )
             				{
-            					if( $scope.AllUsers[i].Name == $scope.frequest.FriendName )
+            					if( $scope.AllFriends[i].Name == $scope.frequest.FriendName )
             					{
-            						$scope.AllUsers[i].IsFriend = "Add Friend";
+            						$scope.AllFriends[i].IsFriend = "Add Friend";
             						break;
             					}	
             				}
             				
-            				console.log( $scope.AllUsers );
+            				for( i = 0 ; i < $scope.PendingFriends.length ; i++ )
+            				{
+            					if( $scope.PendingFriends[i].Name == $scope.frequest.FriendName )
+            					{
+            						$scope.PendingFriends[i].IsFriend = "Add Friend";
+            						break;
+            					}	
+            				}
+            				
+            				console.log( $scope.AllFriends );
             				
             				$scope.updated = true;
             				
@@ -227,16 +252,25 @@
             			
             			if( $scope.response == "Updated" )
             			{
-            				for( i = 0 ; i < $scope.AllUsers.length ; i++ )
+            				for( i = 0 ; i < $scope.AllFriends.length ; i++ )
             				{
-            					if( $scope.AllUsers[i].Name == $scope.frequest.FriendName )
+            					if( $scope.AllFriends[i].Name == $scope.frequest.FriendName )
             					{
-            						$scope.AllUsers[i].IsFriend = "Add Friend";
+            						$scope.AllFriends[i].IsFriend = "Add Friend";
             						break;
             					}	
             				}
             				
-            				console.log( $scope.AllUsers );
+            				for( i = 0 ; i < $scope.PendingFriends.length ; i++ )
+            				{
+            					if( $scope.PendingFriends[i].Name == $scope.frequest.FriendName )
+            					{
+            						$scope.PendingFriends[i].IsFriend = "Add Friend";
+            						break;
+            					}	
+            				}
+            				
+            				console.log( $scope.AllFriends );
             				
             				$scope.updated = true;
             				
@@ -277,16 +311,25 @@
             			
             			if( $scope.response == "Updated" )
             			{
-            				for( i = 0 ; i < $scope.AllUsers.length ; i++ )
+            				for( i = 0 ; i < $scope.AllFriends.length ; i++ )
             				{
-            					if( $scope.AllUsers[i].Name == $scope.frequest.FriendName )
+            					if( $scope.AllFriends[i].Name == $scope.frequest.FriendName )
             					{
-            						$scope.AllUsers[i].IsFriend = "Friends";
+            						$scope.AllFriends[i].IsFriend = "Friends";
             						break;
             					}	
             				}
             				
-            				console.log( $scope.AllUsers );
+            				for( i = 0 ; i < $scope.PendingFriends.length ; i++ )
+            				{
+            					if( $scope.PendingFriends[i].Name == $scope.frequest.FriendName )
+            					{
+            						$scope.PendingFriends[i].IsFriend = "Friends";
+            						break;
+            					}	
+            				}
+            				
+            				console.log( $scope.AllFriends );
             				
             				$scope.updated = true;
             				
@@ -346,55 +389,45 @@
 			
 			<br>
 			
-			<div class="row">
+			<div class="row" ng-show="currentUser == data.Username">
 				<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
-					Common Links: {{data.Username}}
+					Pending Requests: {{data.Username}}
 				</div>
 			</div>
 			
 			<br>
 			
-			<table style="width: 80%;" class="table center">
-					
-				<tr ng-show="(data.Username == currentUser)">
-					<td>
-					<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
-						<a href="${pageContext.request.contextPath}/blog/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li > My Blogs</li></a>
-						<a href="${pageContext.request.contextPath}/forum/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> My Forums</li></a>	
-						<a href="${pageContext.request.contextPath}/profile/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> My Profile</li></a>						
-					</ul>
-					</td>
-				</tr>
+			<table class="table center myprofile" ng-show="PendingFriendsEmpty && (currentUser == data.Username)">
+						
+				<tr>
+							
+					<td colspan="2">
+								
+						<div class="blog-posts-nopost" style="text-align: center;">
 				
-				<tr ng-show="!(data.Username == currentUser)">
-					<td>
-					<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
-						<a href="${pageContext.request.contextPath}/blog/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li > Blogs: ${userName} </li></a>
-						<a href="${pageContext.request.contextPath}/forum/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> Forums: ${userName} </li></a>
-						<a href="${pageContext.request.contextPath}/profile/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> Profile: ${userName}</li></a>							
-					</ul>
+							<label>No Pending Requests.</label>
+									
+						</div>
+								
 					</td>
+							
 				</tr>
-									  	
-									  	
+						
 			</table>
 			
-			<div class="row">
-				<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
-					Find Friends:
-				</div>
-			</div>
 			
-			<table style="width: 80%;" class="table center">
+			
+			<table style="width: 80%;" class="table center" ng-show="!( PendingFriendsEmpty && (currentUser == data.Username) )">
+				<br>
 				
 				<tr>
-					<td>
+					<td ng-show="( (currentUser == data.Username) )">
 						<br>
-						<input type="text" id="search" value="" placeholder="Enter Search Keyword..." class="form-control search-text" ng-model="searchKeyword" ng-disabled="stateDisabled" />
+						<input type="text" id="search" value="" placeholder="Enter Search Keyword..." class="form-control search-text" ng-model="searchPendingKeyword" ng-disabled="stateDisabled" />
 					</td>
 				</tr>
 				
-				<tr ng-repeat="x in AllUsers| filter: searchKeyword">
+				<tr ng-repeat="x in PendingFriends| filter: searchPendingKeyword">
 					<td class="blog-posts">
 						<hr>
 						<br>
@@ -441,7 +474,118 @@
 											</div>
 											<div class="col-lg-6">
 												<br>
-												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/friends/{{x.Name}}">- Friends</a></label>
+												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/friend/{{x.Name}}">- Friends</a></label>
+												<br>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<br>
+												<label>Basic Info:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>{{x.BasicInfo}}</label>
+												<br>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+								
+							</div>
+							
+						</div>
+						<br>
+						
+					</td>
+				</tr>
+									  	
+			</table>
+			
+			<!--  -->
+			
+			<div class="row">
+				<div class="col-lg-12" style="font: small-caps 28px/50px Calibri, sans-serif; color: rgba(28,181,223,0.8); background-color: rgba(255,255,255,1.0); border-bottom: 1px solid rgb(128,0,0); text-align: left; padding-left: 15px; ">
+					Friends: {{data.Username}}
+				</div>
+			</div>
+			
+			<br>
+			
+			<table class="table center myprofile" ng-show="AllFriendsEmpty">
+						
+				<tr>
+							
+					<td colspan="2">
+								
+						<div class="blog-posts-nopost" style="text-align: center;">
+				
+							<label>No friends to show.</label>
+									
+						</div>
+								
+					</td>
+							
+				</tr>
+						
+			</table>
+			
+			<br>
+			
+			<table style="width: 80%;" class="table center" ng-show="!AllFriendsEmpty">
+				
+				<tr>
+					<td>
+						<br>
+						<input type="text" id="search" value="" placeholder="Enter Search Keyword..." class="form-control search-text" ng-model="searchKeyword" ng-disabled="stateDisabled" />
+					</td>
+				</tr>
+				
+				<tr ng-repeat="x in AllFriends| filter: searchKeyword">
+					<td class="blog-posts">
+						<hr>
+						<br>
+						<div class="container">
+							<div class="row">
+								<div class="col-lg-3">
+									<img alt="{{x.Name}}" ng-src="${pageContext.request.contextPath}/{{x.Image}}" class="img-thumbnail img-center" width="104"></img>
+								</div>
+								<div class="col-lg-9">
+									
+									<div class="container center">
+										<div class="row">
+											<div class="col-lg-3">
+												<br>
+												<label>Name: <a href="${pageContext.request.contextPath}/profile/{{x.Name}}" ng-class="stateDisabled && 'link-disabled' || ''">{{x.Name}}</a></label>
+												<br>
+											</div>
+											<div class="col-lg-3">
+												<br>
+												<span class="user-online" ng-show="x.Online">Online</span>
+												<span class="user-offline" ng-show="!x.Online">Offline</span>
+												<br>
+											</div>
+											<div class="col-lg-6">
+												<br>
+												<label>Friendship Status:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												<button class="btn btn-primary" ng-show="x.IsFriend == 'Add Friend'" ng-disabled="stateDisabled" ng-click="AddFriend(currentUser,x.Name)" >{{x.IsFriend}}</button>
+												<button class="btn btn-primary" ng-show="x.IsFriend == 'Friends'" ng-disabled="stateDisabled" ng-click="RemoveFriend(currentUser,x.Name)" >Friends (Click to Remove)</button>
+												<button class="btn btn-primary" ng-show="x.IsFriend == 'Confirm Request'" ng-disabled="stateDisabled" ng-click="ConfirmRequest(currentUser,x.Name)" >Confirm Request</button>
+												<button class="btn btn-primary" ng-show="x.IsFriend == 'Friend Request Pending'" ng-disabled="stateDisabled" ng-click="RemovePending(currentUser,x.Name)" >Request Pending (Click to Undo)</button>
+												<br>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-3">
+												<br>
+												<label class="btn btn-link" ng-class="stateDisabled && 'link-disabled' || ''" style="font-size: 16px;"><a href="${pageContext.request.contextPath}/blog/{{x.Name}}" >- Blogs</a></label>
+												<br>
+											</div>
+											<div class="col-lg-3">
+												<br>
+												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/forum/{{x.Name}}">- Forums</a></label>
+												<br>
+											</div>
+											<div class="col-lg-6">
+												<br>
+												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/friend/{{x.Name}}">- Friends</a></label>
 												<br>
 											</div>
 										</div>

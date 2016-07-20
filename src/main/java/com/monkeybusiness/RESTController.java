@@ -236,6 +236,153 @@ public class RESTController
     }
 	
 	@CrossOrigin
+    @RequestMapping(value = "/AddFriend/", method = RequestMethod.POST)
+    public ResponseEntity<String> AddFriend(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		System.out.println(data.get("FriendName"));
+		
+		Profile p = ps.getProfile( data.get("FriendName").toString() );
+		
+		if( p.getPendingFriendList() == null )
+			p.setPendingFriendList( data.get("currentUser").toString());
+		else
+			p.setPendingFriendList( p.getPendingFriendList() + "," + data.get("currentUser").toString() );
+		
+		ps.updateProfile(p);
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Updated");
+		
+        System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/RemovePending/", method = RequestMethod.POST)
+    public ResponseEntity<String> RemovePending(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		System.out.println(data.get("FriendName"));
+		
+		Profile p = ps.getProfile( data.get("FriendName").toString() );
+		
+		if( p.getPendingFriendList() != null && p.getPendingFriendList().contains(data.get("currentUser").toString()) )
+		{
+			String temp = p.getPendingFriendList();
+			
+			temp = temp.replaceAll( data.get("currentUser").toString() , "");
+			
+			temp = temp.replaceAll( ",," , "");
+			
+			p.setPendingFriendList(temp);
+			
+			ps.updateProfile(p);
+		}
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Updated");
+		
+        System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/ConfirmRequest/", method = RequestMethod.POST)
+    public ResponseEntity<String> ConfirmRequest(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		System.out.println(data.get("FriendName"));
+		
+		Profile p1 = ps.getProfile( data.get("currentUser").toString() );
+		Profile p2 = ps.getProfile( data.get("FriendName").toString() );
+		
+		if( p1.getPendingFriendList() != null && p1.getPendingFriendList().contains(data.get("FriendName").toString()) )
+		{
+			String temp = p1.getPendingFriendList();
+			
+			temp = temp.replaceAll( data.get("FriendName").toString() , "");
+			
+			temp = temp.replaceAll( ",," , "");
+			
+			p1.setPendingFriendList(temp);
+			
+			ps.updateProfile(p1);
+		}
+		
+		if( p1.getFriendList() == null )
+			p1.setFriendList( data.get("FriendName").toString());
+		else
+			p1.setFriendList( p1.getFriendList() + "," + data.get("FriendName").toString() );
+		
+		ps.updateProfile(p1);
+		
+		if( p2.getFriendList() == null )
+			p2.setFriendList( data.get("currentUser").toString());
+		else
+			p2.setFriendList( p2.getFriendList() + "," + data.get("currentUser").toString() );
+		
+		ps.updateProfile(p2);
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Updated");
+		
+        System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/RemoveFriend/", method = RequestMethod.POST)
+    public ResponseEntity<String> RemoveFriend(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		System.out.println(data.get("FriendName"));
+		
+		Profile p1 = ps.getProfile( data.get("currentUser").toString() );
+		Profile p2 = ps.getProfile( data.get("FriendName").toString() );
+		
+		if( p1.getFriendList() != null && p1.getFriendList().contains(data.get("FriendName").toString()) )
+		{
+			String temp = p1.getFriendList();
+			
+			temp = temp.replaceAll( data.get("FriendName").toString() , "");
+			
+			temp = temp.replaceAll( ",," , "");
+			
+			p1.setFriendList(temp);
+			
+			ps.updateProfile(p1);
+		}
+		
+		if( p2.getFriendList() != null && p2.getFriendList().contains(data.get("currentUser").toString()) )
+		{
+			String temp = p2.getFriendList();
+			
+			temp = temp.replaceAll( data.get("currentUser").toString() , "");
+			
+			temp = temp.replaceAll( ",," , "");
+			
+			p2.setFriendList(temp);
+			
+			ps.updateProfile(p2);
+		}
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Updated");
+		
+        System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
     @RequestMapping(value = "/updateUserForum/", method = RequestMethod.POST)
     public ResponseEntity<String> updateUserForum(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
         

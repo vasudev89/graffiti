@@ -1,10 +1,13 @@
 package com.monkeybusiness;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -95,7 +98,7 @@ public class MonkeyBusinessController {
 			{
 				String temp = p.getFriendList();
 				
-				if( temp.contains(username) )
+				if( temp!=null && temp.contains(username) )
 				{
 					mav.addObject("dataValue", (p == null)?null:p.getForums());
 				}
@@ -152,26 +155,155 @@ public class MonkeyBusinessController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/activities" , method = RequestMethod.GET)
-	public ModelAndView activities(HttpServletRequest request) throws IOException{
-		ModelAndView mav = new ModelAndView("activities");
+	@RequestMapping(value="/hactivities" , method = RequestMethod.GET)
+	public String hactivities(HttpServletRequest request) throws IOException{
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if (auth != null && !( auth.getName()==null) )
-	    {    
-	    	System.out.println(auth.getName());
-	    	
-	    	Profile p = ps.getProfile(auth.getName());
-	    	
-	    	System.out.println( "Login: " + p.getLoginStatus() );
-	    	
-	    	p.setLoginStatus(true);
-	    	
-	    	ps.updateProfile(p);
-	    	
-	    }
+		{
+			Profile p = ps.getProfile(auth.getName());
+			
+			p.setLoginStatus(true);
+			
+			ps.updateProfile(p);
+		}
 		
+		return "redirect:http://localhost:9002/monkeybusiness/activities/"+auth.getName();
+	}
+	
+	@RequestMapping(value="/activities/{userName}" , method = RequestMethod.GET)
+	public ModelAndView activities(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
+		ModelAndView mav = new ModelAndView("activities");
+		
+		Profile p = ps.getProfile(username);
+    	
+		ArrayList<Profile> allProfiles = (ArrayList<Profile>)ps.getAllProfiles();
+		
+		JSONArray jarr = new JSONArray();
+		
+		System.out.println(username);
+		
+		for( Profile pe : allProfiles )
+		{
+			if( !pe.getUsername().equals(username) )
+			{
+				JSONObject jobj = new JSONObject();
+				
+				jobj.put("Name", pe.getUsername());
+				jobj.put("Online", pe.getLoginStatus());
+				jobj.put("Image", pe.getImage().replaceAll("\\\\", ""));
+				jobj.put("BasicInfo", pe.getBasicInfo());
+				
+				/*System.out.println( pe.getFriendList() );
+				System.out.println( p.getUsername() );
+				System.out.println( pe.getPendingFriendList() );
+				*/
+				
+				if( pe.getFriendList() != null && pe.getFriendList().contains(p.getUsername()) )
+					{
+						jobj.put("IsFriend", "Friends");
+					}
+					else if( pe.getPendingFriendList() != null && pe.getPendingFriendList().contains(p.getUsername()) )
+					{
+						jobj.put("IsFriend", "Friend Request Pending");
+					}
+					else if( p.getPendingFriendList() != null && p.getPendingFriendList().contains(pe.getUsername()) )
+					{
+						jobj.put("IsFriend", "Confirm Request");
+					}
+					else
+					{
+						jobj.put("IsFriend", "Add Friend");
+					}
+								System.out.println(jobj);
+				
+				jarr.add(jobj);
+			} 
+		}
+		
+		System.out.println(jarr);
+		
+		mav.addObject("dataValue", p);
+	    mav.addObject("userName", username);
+	    mav.addObject("AllUsers", jarr);
+	    
+		return mav;
+	}
+	
+	@RequestMapping(value="/friends/{userName}" , method = RequestMethod.GET)
+	public ModelAndView friend(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
+		ModelAndView mav = new ModelAndView("friends");
+		
+		Profile p = ps.getProfile(username);
+    	
+		JSONArray jarr = new JSONArray();
+		
+		String temp = p.getFriendList();
+		
+		if( temp != null )
+		{
+			String friends[] = temp.split(",");
+			
+			for( String friend : friends )
+			{
+				if( friend != null && !friend.equals("") )
+				{
+					Profile pe = ps.getProfile(friend);
+					
+					JSONObject jobj = new JSONObject();
+					
+					jobj.put("Name", pe.getUsername());
+					jobj.put("Online", pe.getLoginStatus());
+					jobj.put("Image", pe.getImage().replaceAll("\\\\", ""));
+					jobj.put("BasicInfo", pe.getBasicInfo());
+					
+					jobj.put("IsFriend", "Friends");
+					
+					jarr.add(jobj);
+				}
+			}
+		}
+		
+		mav.addObject("AllFriends", jarr);
+		
+		//
+		
+		temp = p.getPendingFriendList();
+		
+		jarr = new JSONArray();
+		
+		if( temp != null )
+		{
+			String friends[] = temp.split(",");
+			
+			for( String friend : friends )
+			{
+				if( friend != null && !friend.equals("") )
+				{
+					Profile pe = ps.getProfile(friend);
+					
+					JSONObject jobj = new JSONObject();
+					
+					jobj.put("Name", pe.getUsername());
+					jobj.put("Online", pe.getLoginStatus());
+					jobj.put("Image", pe.getImage().replaceAll("\\\\", ""));
+					jobj.put("BasicInfo", pe.getBasicInfo());
+					
+					jobj.put("IsFriend", "Confirm Request");
+					
+					jarr.add(jobj);
+				}
+			}
+		}
+		
+		mav.addObject("PendingFriends", jarr);
+		
+		//
+		
+		mav.addObject("dataValue", p);
+	    mav.addObject("userName", username);
+	    
 		return mav;
 	}
 	

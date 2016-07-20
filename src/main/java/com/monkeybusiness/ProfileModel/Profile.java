@@ -44,15 +44,17 @@ public class Profile
 	private String Gender;
 	
 	@Lob
-	private String FriendList = "[]";
+	private String FriendList;
+	@Lob
+	private String PendingFriendList;
 	@Lob
 	private String Blogs;
 	@Lob
 	private String Forums;
 	@Lob
-	private String ChatHistory = "[]";
+	private String ChatHistory;
 	@Lob
-	private String Notifications = "[]";
+	private String Notifications;
 	
 	private boolean LoginStatus;
 	private String BasicInfo;
@@ -67,6 +69,12 @@ public class Profile
 	
 	public String getImage() {
 		return Image;
+	}
+	public String getPendingFriendList() {
+		return PendingFriendList;
+	}
+	public void setPendingFriendList(String pendingFriendList) {
+		PendingFriendList = pendingFriendList;
 	}
 	public void setImage(String image) {
 		Image = image;
@@ -194,9 +202,9 @@ public class Profile
 	}
 	@Override
 	public String toString() {
-		return "{ID:\"" + ID + "\", Email:\"" + Email + "\", Username:\"" + Username + "\","
-				+ "Phone:\"" + Phone + "\", Location:\"" + Location + "\", LoginStatus:\"" + LoginStatus + "\", BasicInfo:\"" + BasicInfo
-				+ "\", Role:\"" + Role + "\", Active:\"" + Active + "\" , Image:\"" + Image + "\" , Gender:\"" + Gender + "\" }";
+		return "{\"ID\":\"" + ID + "\", \"Email\":\"" + Email + "\", \"Username\":\"" + Username + "\","
+				+ "\"Phone\":\"" + Phone + "\", \"Location\":\"" + Location + "\", \"LoginStatus\":\"" + LoginStatus + "\", \"BasicInfo\":\"" + BasicInfo
+				+ "\", \"Role\":\"" + Role + "\", \"Active\":\"" + Active + "\" , \"Image\":\"" + Image + "\" , \"Gender\":\"" + Gender + "\" }";
 	}
 	
 	

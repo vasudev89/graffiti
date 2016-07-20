@@ -27,7 +27,7 @@
         <security:form-login login-page="/index" 
         					 username-parameter="username"
         					 password-parameter="password"
-                             default-target-url="/activities" 
+                             default-target-url="/hactivities/" 
                              authentication-failure-url="/index?loginerror=1" />
         <security:logout logout-url="/logout" logout-success-url="/index" />
         

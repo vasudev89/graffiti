@@ -829,7 +829,13 @@
 				
 				<br>
 				
-				<table style="width: 80%;" class="table">
+				<!--  -->
+				
+				</div>
+			
+			</div>
+			
+			<table style="width: 80%;" class="table">
 					
 					<tr>
 						<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
@@ -841,12 +847,6 @@
 					<br>
 									  	
 				</table>
-				
-				<!--  -->
-				
-				</div>
-			
-			</div>
 			
 		</div>
 			

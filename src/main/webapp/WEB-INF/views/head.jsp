@@ -23,7 +23,7 @@
 			
 			<c:otherwise>
 				
-				<li><a class="navigation-element" href="${pageContext.request.contextPath}/activities">${pageContext.request.userPrincipal.name}</a></li>
+				<li><a class="navigation-element" href="${pageContext.request.contextPath}/activities/${pageContext.request.userPrincipal.name}">${pageContext.request.userPrincipal.name}</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/profile/${pageContext.request.userPrincipal.name}">Profile</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/friends/${pageContext.request.userPrincipal.name}">Friends</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/blog/${pageContext.request.userPrincipal.name}">Blog</a></li>
