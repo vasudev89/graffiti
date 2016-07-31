@@ -9,7 +9,9 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -338,46 +340,150 @@ public class RESTController
     }
 	
 	@CrossOrigin
+    @RequestMapping(value = "/GetAllFriends/", method = RequestMethod.POST)
+    public ResponseEntity<String> GetAllFriends(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		
+		Profile p1 = ps.getProfile( data.get("currentUser").toString() );
+		
+		String temp = p1.getChatHistory();
+		
+		JSONParser jpar = new JSONParser();
+		
+		JSONArray chathist = new JSONArray();
+		
+		try
+		{
+			chathist = (JSONArray)jpar.parse(temp);
+		}
+		catch(Exception e)
+		{
+			System.out.println("CHAT HISTORY PARSE ERROR!!");
+		}
+		
+		JSONArray jarr = new JSONArray();
+		
+		if( p1 != null && p1.getFriendList() != null )
+		{
+			String friends[] = p1.getFriendList().split(",");
+			
+			for( String friend: friends )
+			{
+				Profile pe = ps.getProfile(friend);
+				
+				if( pe != null )
+				{
+					JSONObject jobj = new JSONObject();
+					
+					jobj.put("Name", pe.getUsername());
+					jobj.put("Online", pe.getLoginStatus());
+					jobj.put("Image", pe.getImage().replaceAll("\\\\", ""));
+					jobj.put("BasicInfo", pe.getBasicInfo());
+					jobj.put("ChatWindowOpen", false);
+					jobj.put("ReadStatus", "");
+		
+					JSONArray messages = new JSONArray();
+					
+					try
+					{
+						for( Object x:chathist )
+						{
+							JSONObject newx = (JSONObject)x;
+							
+							if	( 
+									(
+											newx.get("From").equals( p1.getUsername() ) && 
+											newx.get("To").equals( pe.getUsername() ) 
+									)
+									||
+									(
+											newx.get("From").equals( pe.getUsername() ) && 
+											newx.get("To").equals( p1.getUsername() ) 
+									)
+								)
+							{
+								messages.add(newx);
+								
+								if( newx.get("status") != null && newx.get("status").equals( "Unread" ) )
+								{
+									jobj.put("ReadStatus", "Unread");
+								}
+							}
+						}
+					}
+					catch(Exception e)
+					{
+						System.out.println("CHAT RETRIEVAL ERROR!!");
+					}
+					
+					jobj.put("Messages", messages);
+					jobj.put("currentMessage", "");
+					
+					jarr.add(jobj);
+				}
+			}
+			
+		}
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("AllMyFriends", jarr);
+		
+        System.out.println(json.toString());
+		
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
     @RequestMapping(value = "/RemoveFriend/", method = RequestMethod.POST)
     public ResponseEntity<String> RemoveFriend(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
         
 		System.out.println(data.get("currentUser"));
 		System.out.println(data.get("FriendName"));
 		
-		Profile p1 = ps.getProfile( data.get("currentUser").toString() );
-		Profile p2 = ps.getProfile( data.get("FriendName").toString() );
-		
-		if( p1.getFriendList() != null && p1.getFriendList().contains(data.get("FriendName").toString()) )
-		{
-			String temp = p1.getFriendList();
-			
-			temp = temp.replaceAll( data.get("FriendName").toString() , "");
-			
-			temp = temp.replaceAll( ",," , "");
-			
-			p1.setFriendList(temp);
-			
-			ps.updateProfile(p1);
-		}
-		
-		if( p2.getFriendList() != null && p2.getFriendList().contains(data.get("currentUser").toString()) )
-		{
-			String temp = p2.getFriendList();
-			
-			temp = temp.replaceAll( data.get("currentUser").toString() , "");
-			
-			temp = temp.replaceAll( ",," , "");
-			
-			p2.setFriendList(temp);
-			
-			ps.updateProfile(p2);
-		}
-		
 		JSONObject json = new JSONObject();
 		
-		json.put("status", "Updated");
+		if( data.get("currentUser") != null && !data.get("currentUser").equals("") && data.get("FriendName") != null && !data.get("FriendName").equals("") )
+		{
+			Profile p1 = ps.getProfile( data.get("currentUser").toString() );
+			Profile p2 = ps.getProfile( data.get("FriendName").toString() );
+			
+			if( p1.getFriendList() != null && p1.getFriendList().contains(data.get("FriendName").toString()) )
+			{
+				String temp = p1.getFriendList();
+				
+				temp = temp.replaceAll( data.get("FriendName").toString() , "");
+				
+				temp = temp.replaceAll( ",," , "");
+				
+				p1.setFriendList(temp);
+				
+				ps.updateProfile(p1);
+			}
+			
+			if( p2.getFriendList() != null && p2.getFriendList().contains(data.get("currentUser").toString()) )
+			{
+				String temp = p2.getFriendList();
+				
+				temp = temp.replaceAll( data.get("currentUser").toString() , "");
+				
+				temp = temp.replaceAll( ",," , "");
+				
+				p2.setFriendList(temp);
+				
+				ps.updateProfile(p2);
+			}
+			
+			json.put("status", "Updated");
+			
+	        System.out.println(json.toString());
+		}
+		else
+		{
+			json.put("status", "Not Updated");
+		}
 		
-        System.out.println(json.toString());
         
         return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
     }

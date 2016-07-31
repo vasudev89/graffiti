@@ -98,7 +98,12 @@ public class MonkeyBusinessController {
 			{
 				String temp = p.getFriendList();
 				
-				if( temp!=null && temp.contains(username) )
+				System.out.println( temp );
+				System.out.println( auth.getName() );
+				
+				System.out.println( temp.contains(auth.getName()) );
+				
+				if( temp!=null && temp.contains(auth.getName()) )
 				{
 					mav.addObject("dataValue", (p == null)?null:p.getForums());
 				}
@@ -136,21 +141,28 @@ public class MonkeyBusinessController {
 	public String logout(HttpServletRequest request) throws IOException{
 		String mav = new String("redirect:logout");
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		if (auth != null && !( auth.getName()==null) )
-	    {    
-	    	System.out.println(auth.getName());
-	    	
-	    	Profile p = ps.getProfile(auth.getName());
-	    	
-	    	System.out.println( "Login: " + p.getLoginStatus() );
-	    	
-	    	p.setLoginStatus(false);
-	    	
-	    	ps.updateProfile(p);
-	    	
-	    }
+		try
+		{
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			
+			if (auth != null && !( auth.getName()==null) )
+		    {    
+		    	System.out.println(auth.getName());
+		    	
+		    	Profile p = ps.getProfile(auth.getName());
+		    	
+		    	System.out.println( "Login: " + p.getLoginStatus() );
+		    	
+		    	p.setLoginStatus(false);
+		    	
+		    	ps.updateProfile(p);
+		    	
+		    }
+		}
+		catch(Exception e)
+		{
+			
+		}
 		
 		return mav;
 	}

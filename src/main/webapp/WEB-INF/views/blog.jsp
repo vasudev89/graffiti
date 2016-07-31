@@ -19,7 +19,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/ProgressObject.js"></script>
 
 <script type="text/javascript">
-	var myApp = angular.module("myApp",[]);
+	var myApp = angular.module("myApp",["myAppChat"]);
 	
 /////////////////////////////////////
 	
@@ -343,9 +343,12 @@
 </script>
 
 <!--  -->
+
+<c:import url="head.jsp"></c:import>
+
 <body onload='resizing();onLoad()' ng-app="myApp" ng-controller='myCtrl'>
 
-	<c:import url="head.jsp"></c:import>
+	
 
 	<div class="body" id="body_div">
 	
@@ -451,7 +454,7 @@
 							
 							<div class="blog-post-other" ng-show="x.Comments.length == 0">No Comments so far.</div>
 							
-							<div ng-repeat="y in x.Comments">
+							<div ng-repeat="y in x.Comments track by $index">
 								<label>{{y.By}} :</label>
 								<br>
 								<br>

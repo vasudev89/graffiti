@@ -1,0 +1,15 @@
+com\monkeybusiness\ProfileModel\ProfileDAOImpl.class
+com\monkeybusiness\MonkeyBusinessController.class
+com\monkeybusiness\ProfileRole\ProfileRoleDAO.class
+com\monkeybusiness\ProfileRole\ProfileRoleServiceImpl.class
+com\monkeybusiness\ProfileRole\ProfileRole.class
+com\monkeybusiness\Hash\HashManager.class
+com\monkeybusiness\ProfileModel\Profile.class
+com\monkeybusiness\RESTController.class
+com\monkeybusiness\ProfileModel\ProfileService.class
+com\monkeybusiness\WebSocketBrokerConfig.class
+com\monkeybusiness\ProfileRole\ProfileRoleService.class
+com\monkeybusiness\FriendListManager\FriendList.class
+com\monkeybusiness\ProfileModel\ProfileDAO.class
+com\monkeybusiness\ProfileModel\ProfileServiceImpl.class
+com\monkeybusiness\ProfileRole\ProfileRoleDAOImpl.class

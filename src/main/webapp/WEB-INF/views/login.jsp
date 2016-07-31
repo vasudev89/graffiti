@@ -33,7 +33,7 @@
 	                        <!--  -->
 							
 							<tr>
-								<td><input name="username" path="username" type="text" class="form-control form-input" id="email" placeholder="Enter Email" autofocus="autofocus"/></td>							  		
+								<td><input name="username" path="username" type="text" class="form-control form-input" id="email" placeholder="Enter Username" autofocus="autofocus"/></td>							  		
 							</tr>
 										  	
 							<tr>
