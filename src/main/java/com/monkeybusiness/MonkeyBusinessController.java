@@ -9,6 +9,8 @@ import javax.validation.Valid;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,9 @@ public class MonkeyBusinessController {
 	
 	@Autowired
 	ProfileRoleService prs;
+	
+	@Autowired
+	JavaMailSender mail;
 	
 	@RequestMapping(value="/" , method = RequestMethod.GET)
 	public ModelAndView home(HttpServletRequest request) throws IOException{
@@ -373,6 +378,24 @@ public class MonkeyBusinessController {
 					
 					System.out.println("In Profile Insert: User Created Successfully");
 					
+					String To = p.getEmail();
+					String Subject = "Welcome to Graffitat";
+					String Message = "Welcome " + p.getUsername() + ". \n We look forward to your continued support to us. \n Please write about your experiences with us. \n\n Regards, \n The Graffitat Team";
+					
+					SimpleMailMessage email = new SimpleMailMessage();
+					
+					email.setTo(To);
+					email.setSubject(Subject);
+					email.setText(Message);
+					
+					try
+					{
+						mail.send(email);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
 				}
 				else
 				{
