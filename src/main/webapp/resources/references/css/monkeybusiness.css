@@ -281,7 +281,26 @@ button
 	color: rgba(28,81,123,0.8);
 	background-color: rgba(228,281,223,0.8); 
 	text-align: left; 
-	padding: 15px; "
+	padding: 15px;
+}
+
+.chat-unread-messages
+{
+	//border-top: 1px solid rgb(128,128,0);
+	border-bottom: 1px solid rgb(128,0,0);
+	
+	font: 16px Calibri;
+	font-variant: small-caps;
+	font-style: oblique;
+	
+	color: rgba(255,281,255,1.0);
+	background-color: rgba(128,181,123,0.8); 
+	text-align: left; 
+	padding: 15px;
+	
+	margin: auto;
+	
+	width: 85%; 
 }
 
 .blog-post-handle

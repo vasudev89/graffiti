@@ -319,8 +319,8 @@
 					
 							<br>
 					
-							<div class="row" style="background-color: #FFC706; font: 17px Calibri; font-variant: small-caps; font-style: oblique; text-align:center; margin: auto; width: 85%; height: 15px; line-height: 15px;" ng-show="x.ReadStatus == 'Unread'">
-								Unread Messages
+							<div class="row chat-unread-messages" ng-show="x.ReadStatus == 'Unread'">
+								<span class="glyphicon glyphicon-envelope" style="color: rgb(128,0,0);"></span> &nbsp;&nbsp; Unread Messages
 							</div>
 					
 							<br>
