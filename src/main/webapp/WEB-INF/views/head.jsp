@@ -32,6 +32,19 @@
                                     }
                             );                    
     			}
+    			,
+			    GetCurrentUserImage: function(item){
+			        return $http.post('http://localhost:9002/monkeybusiness/GetCurrentUserImage/', item)
+			                .then(
+			                        function(response){
+			                            return response.data;
+			                        }, 
+			                        function(errResponse){
+			                            console.error('Error while updating User');
+			                            return $q.reject(errResponse);
+			                        }
+			                );                    
+				}
 				
     };
  
@@ -43,6 +56,8 @@
 		
 		$scope.currentUser = '${pageContext.request.userPrincipal.name}';
 		//$scope.currentUser = 'vasudev89';
+		
+		$scope.currentUserImage;
 		
 		$scope.UpdatePageSize = function()
 		{
@@ -85,6 +100,31 @@
                 function(errResponse)
                 {
                 	console.error('Error while getting Friends.');
+                } 
+    	);
+		
+		var resp1 = $myUserService.GetCurrentUserImage($scope.frequest)
+        .then(
+        		function(response)
+        		{
+        			try
+        			{
+        				$scope.currentUserImage = response.Image;
+        				
+        				//console.log( $scope.AllMyFriends );
+        				
+	            		
+        			}
+        			catch(e)
+        			{
+        				$scope.currentUserImage = "";
+        			}
+        			
+        		}
+            , 
+                function(errResponse)
+                {
+                	console.error('Error while getting Current User Image.');
                 } 
     	);
 			
@@ -262,7 +302,7 @@
 				<div class="row">
 				
 					<div class="col-lg-12">
-						<input type="text" id="search" value="" placeholder="Search Friends..." class="form-control search-text" ng-model="searchChatKeyword" ng-disabled="stateDisabled" />
+						<input type="text" id="search" value="" placeholder="Search Friends..." class="form-control search-text" ng-model="searchChatKeyword.Name" ng-disabled="stateDisabled" />
 					</div>
 				
 				</div>
@@ -311,7 +351,12 @@
 							<div class="col-lg-12 form-control form-input blog-post-comment" style="height: 150px;overflow-y: scroll;" id="{{x.Name}}">
 								<div>
 									<span ng-repeat="z in x.Messages">
+										<span ng-if="z.From == currentUser">
+										<img alt="{{currentUser}}" ng-src="${pageContext.request.contextPath}/{{currentUserImage}}" class="img-thumbnail img-circle" width="60" style="position:absolute; right: 0px;"></img><br><br><br><br>
 										<label class="form-control form-input blog-post-comment" style="text-align: right; width: 100%; font: 15px Calibri;font-variant: normal;font-style: oblique; font-weight: bold; line-height: 100%; background-color: #00CCCC; color: #FFFFFF;" ng-if="z.From == currentUser">{{z.Message}}</label>
+										</span>
+										
+										<img alt="{{x.Name}}" ng-src="${pageContext.request.contextPath}/{{x.Image}}" class="img-thumbnail img-circle" width="60" ng-if="z.From != currentUser"></img>
 										<label class="form-control form-input blog-post-comment" style="text-align: left; width: 100%; font: 15px Calibri;font-variant: normal;font-style: oblique; font-weight: bold; line-height: 100%; background-color: #FFFFFF; color: #00CCCC;" ng-if="z.From != currentUser">{{z.Message}}</label>
 									</span>
 								</div>

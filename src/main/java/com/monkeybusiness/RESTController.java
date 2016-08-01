@@ -436,6 +436,23 @@ public class RESTController
     }
 	
 	@CrossOrigin
+    @RequestMapping(value = "/GetCurrentUserImage/", method = RequestMethod.POST)
+    public ResponseEntity<String> GetCurrentUserImage(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		
+		Profile p1 = ps.getProfile( data.get("currentUser").toString() );
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("Image", p1.getImage());
+		
+        System.out.println(json.toString());
+		
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
     @RequestMapping(value = "/RemoveFriend/", method = RequestMethod.POST)
     public ResponseEntity<String> RemoveFriend(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
         
