@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -523,6 +526,209 @@ public class RESTController
 		
         System.out.println(json.toString());
         
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/updateGallery/", method = RequestMethod.POST )
+    public @ResponseBody String updateGallery( MultipartHttpServletRequest request , HttpServletResponse response , UriComponentsBuilder ucBuilder) {
+        
+		System.out.println( "In update Gallery" );
+		
+		System.out.println( request.getHeader("user") );
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Failed");
+		
+		List<MultipartFile> files = request.getFiles("uploadedFile");
+		
+		int counter = 1;
+		
+		for( MultipartFile myfile : files )
+		{
+			String hashname[] = myfile.getOriginalFilename().split(",");
+			
+			BufferedOutputStream stream = null;
+			
+			try
+		    {
+				String path = context.getRealPath("/");
+		        
+		        System.out.println(path);
+		        
+		        File directory = null;
+		        
+		        System.out.println( myfile );
+		        
+		        if (myfile.getContentType().contains("image"))
+		        {
+		            directory = new File(path + "\\resources\\images");
+		            
+		            System.out.println(directory);
+		            
+		            byte[] bytes = null;
+		            File file = null;
+		            bytes = myfile.getBytes();
+		            
+		            if (!directory.exists()) directory.mkdirs();
+		           
+		            if( hashname.length > 0 )
+		            {
+		            	String tempval = HashManager.generateHashCode( request.getHeader("user") + hashname[0] ) + ".jpg";
+		            	
+		            	file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + tempval);
+		            	
+			            System.out.println(file.getAbsolutePath());
+			            
+			            stream = new BufferedOutputStream(new FileOutputStream(file));
+			            stream.write(bytes);
+			            stream.close();
+			            
+			            Profile p = ps.getProfile(request.getHeader("user"));
+			            
+			            if( p != null )
+			            {
+			            	String temp = p.getGallery();
+			            	
+			            	if(temp == null)
+			            	{
+			            		p.setGallery("resources/images/" + tempval );
+			            	}
+			            	else
+			            	{
+			            		p.setGallery(p.getGallery() + ",resources/images/" + tempval );
+			            	}
+			            	
+			            	System.out.println("Gallery:" + p.getGallery());
+			            	
+			            	ps.updateProfile(p);
+			            	
+			            	json.put("status", "Uploaded");
+			            	
+			            	/*JSONObject jobj = new JSONObject();
+			            	
+			            	jobj.put("status", "Progress" );
+			            	jobj.put("Counter", counter++ );
+			            	jobj.put("imagesrc", "resources/images/" + tempval );
+			            	
+			            	return jobj.toJSONString();*/
+			            	
+			            }
+		            }
+
+		        }
+		    }
+		    catch (Exception e)
+		    {
+		    	e.printStackTrace();
+		    }
+
+		}
+		
+		JSONObject jobj = new JSONObject();
+    	
+    	jobj.put("status", "Completed" );
+    	
+    	return jobj.toJSONString();
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/GetUserGallery/", method = RequestMethod.POST)
+    public ResponseEntity<String> GetUserGallery(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		
+		Profile p = ps.getProfile( data.get("currentUser").toString() );
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("Username", data.get("currentUser").toString() );
+		
+		JSONArray jarr = new JSONArray();
+		
+		try
+		{
+			String temp[] = p.getGallery().split(",");
+			
+			for( String t: temp )
+			{
+				if( t!= null && !t.equals("") )
+				{
+					jarr.add(t.replaceAll("\\\\", ""));
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		json.put("Gallery", jarr );
+		
+        System.out.println(json.toString());
+		
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/DeleteFromGallery/", method = RequestMethod.POST)
+    public ResponseEntity<String> DeleteFromGallery(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data.get("currentUser"));
+		
+		Profile p = ps.getProfile( data.get("currentUser").toString() );
+		
+		try
+		{
+			String temp = p.getGallery();
+			
+			String jar[] = ( data.get("GalleryForDelete").toString().split(";") );
+			
+			System.out.println(jar.toString());
+			
+			for( Object x: jar )
+			{
+				temp = temp.replaceAll(x.toString(), "");
+				temp = temp.replaceAll(",,", "");
+			}
+			
+			p.setGallery(temp);
+			
+			ps.updateProfile(p);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("Username", data.get("currentUser").toString() );
+		
+		JSONArray jarr = new JSONArray();
+		
+		try
+		{
+			String temp[] = p.getGallery().split(",");
+			
+			for( String t: temp )
+			{
+				if( t!= null && !t.equals("") )
+				{
+					jarr.add(t.replaceAll("\\\\", ""));
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		json.put("Gallery", jarr );
+		
+        System.out.println(json.toString());
+		
         return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
     }
 }

@@ -56,6 +56,8 @@ public class Profile
 	private String ChatHistory;
 	@Lob
 	private String Notifications;
+	@Lob
+	private String Gallery;
 	
 	private boolean LoginStatus;
 	private String BasicInfo;
@@ -70,6 +72,12 @@ public class Profile
 	
 	public String getImage() {
 		return Image;
+	}
+	public String getGallery() {
+		return Gallery;
+	}
+	public void setGallery(String gallery) {
+		Gallery = gallery;
 	}
 	public String getPendingFriendList() {
 		return PendingFriendList;

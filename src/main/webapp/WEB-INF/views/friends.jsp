@@ -585,9 +585,14 @@
 												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/forum/{{x.Name}}">- Forums</a></label>
 												<br>
 											</div>
-											<div class="col-lg-6">
+											<div class="col-lg-3">
 												<br>
 												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/friends/{{x.Name}}">- Friends</a></label>
+												<br>
+											</div>
+											<div class="col-lg-3">
+												<br>
+												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/gallery/{{x.Name}}">- Gallery</a></label>
 												<br>
 											</div>
 										</div>

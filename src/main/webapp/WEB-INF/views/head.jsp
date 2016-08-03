@@ -279,6 +279,7 @@
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/friends/${pageContext.request.userPrincipal.name}">Friends</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/blog/${pageContext.request.userPrincipal.name}">Blog</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/forum/${pageContext.request.userPrincipal.name}">Forum</a></li>
+				<li><a class="navigation-element" href="${pageContext.request.contextPath}/gallery/${pageContext.request.userPrincipal.name}">Gallery</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/ulogout">Log Out</a></li>
 				
 			</c:otherwise>
@@ -341,8 +342,6 @@
 							<!--  -->
 						
 						</div>
-						
-						
 						
 						<div class="row" style="background-color: rgba(255,255,255,0.95); font: 17px Calibri; font-variant: small-caps; font-style: oblique;" ng-show="x.ChatWindowOpen">
 					

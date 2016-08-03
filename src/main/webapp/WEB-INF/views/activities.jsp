@@ -363,7 +363,8 @@
 					<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
 						<a href="${pageContext.request.contextPath}/blog/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li > My Blogs</li></a>
 						<a href="${pageContext.request.contextPath}/forum/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> My Forums</li></a>	
-						<a href="${pageContext.request.contextPath}/profile/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> My Profile</li></a>						
+						<a href="${pageContext.request.contextPath}/profile/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> My Profile</li></a>
+						<a href="${pageContext.request.contextPath}/gallery/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> My Gallery</li></a>						
 					</ul>
 					</td>
 				</tr>
@@ -373,7 +374,8 @@
 					<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
 						<a href="${pageContext.request.contextPath}/blog/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li > Blogs: ${userName} </li></a>
 						<a href="${pageContext.request.contextPath}/forum/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> Forums: ${userName} </li></a>
-						<a href="${pageContext.request.contextPath}/profile/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> Profile: ${userName}</li></a>							
+						<a href="${pageContext.request.contextPath}/profile/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> Profile: ${userName}</li></a>
+						<a href="${pageContext.request.contextPath}/gallery/${userName}" ng-class="stateDisabled && 'list-group-item profile-list-group-item link-disabled' || 'list-group-item profile-list-group-item'"><li> Gallery: ${userName}</li></a>							
 					</ul>
 					</td>
 				</tr>
@@ -441,9 +443,14 @@
 												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/forum/{{x.Name}}">- Forums</a></label>
 												<br>
 											</div>
-											<div class="col-lg-6">
+											<div class="col-lg-3">
 												<br>
 												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/friends/{{x.Name}}">- Friends</a></label>
+												<br>
+											</div>
+											<div class="col-lg-3">
+												<br>
+												<label class="btn btn-link" style="font-size: 16px;" ng-class="stateDisabled && 'link-disabled' || ''"><a href="${pageContext.request.contextPath}/gallery/{{x.Name}}">- Gallery</a></label>
 												<br>
 											</div>
 										</div>

@@ -858,7 +858,8 @@
 					<tr>
 						<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
 							<a href="${pageContext.request.contextPath}/blog/${userName}" class="list-group-item profile-list-group-item"><li > Blogs</li></a>
-							<a href="${pageContext.request.contextPath}/forum/${userName}" class="list-group-item profile-list-group-item"><li> Forums</li></a>							
+							<a href="${pageContext.request.contextPath}/forum/${userName}" class="list-group-item profile-list-group-item"><li> Forums</li></a>
+							<a href="${pageContext.request.contextPath}/gallery/${userName}" class="list-group-item profile-list-group-item"><li> Gallery</li></a>							
 						</ul>
 					</tr>
 									  	

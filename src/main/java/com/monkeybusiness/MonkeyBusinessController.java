@@ -127,6 +127,40 @@ public class MonkeyBusinessController {
 		return mav;
 	}
 	
+	@RequestMapping(value="/gallery/{userName}" , method = RequestMethod.GET)
+	public ModelAndView gallery(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
+		ModelAndView mav = new ModelAndView("gallery");
+		
+		Profile p = ps.getProfile(username);
+	    
+		JSONArray jarr = new JSONArray();
+		
+		try
+		{
+			String temp[] = p.getGallery().split(",");
+			
+			for( String t: temp )
+			{
+				if( t!= null && !t.equals("") )
+				{
+					jarr.add(t.replaceAll("\\\\", ""));
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		mav.addObject("dataValue", jarr);
+		
+	    System.out.println(username);
+	    
+	    mav.addObject("userName", username);
+	    
+		return mav;
+	}
+	
 	@RequestMapping(value="/blog/{userName}" , method = RequestMethod.GET)
 	public ModelAndView blog(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
 		ModelAndView mav = new ModelAndView("blog");
