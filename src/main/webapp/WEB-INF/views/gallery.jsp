@@ -10,7 +10,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<c:import url="head-meta.jsp"></c:import>	
+	<c:import url="head-meta.jsp"></c:import>
+
+	<style type="text/css">
+	
+	.frame {  
+    margin: auto; width: 50%; vertical-align: middle; height: 100%;
+	}
+	.img-css {  
+	    max-height: 80%;  
+	    max-width: 80%; 
+	    width: auto;
+	    height: auto;
+	    position: absolute;  
+	    top: 0;  
+	    bottom: 0;  
+	    left: 0;  
+	    right: 0;  
+	    margin: auto;
+	}
+	
+	</style>
+
 </head>
 <!--  -->
 
@@ -650,11 +671,11 @@
 		<button class="btn btn-success" style="position: absolute; top: 40%; left: 10%;" ng-click="MoveLeft(imagecounter)" > < </button>
 		<button class="btn btn-success" style="position: absolute; top: 40%; right: 10%;" ng-click="MoveRight(imagecounter)" > > </button>
 	
-		<div style="margin: auto; width: 50%;">
+		<div class="frame">
 			<br>
 			<br>
 			<br>
-			<img id="currentImage" class="img img-thumbnail img-responsive" width="100%" ></img>
+			<img id="currentImage" class="img img-thumbnail img-responsive img-css" ></img>
 			<br>
 			<br>
 		</div>
