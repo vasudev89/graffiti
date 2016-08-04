@@ -344,7 +344,7 @@
 
 <!--  -->
 
-<c:import url="head.jsp"></c:import>
+<c:import url="/head"/>
 
 <body onload='resizing();onLoad()' ng-app="myApp" ng-controller='myCtrl'>
 

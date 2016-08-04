@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,7 +25,94 @@ import org.springframework.web.servlet.ModelAndView;
 import com.monkeybusiness.Hash.HashManager;
 import com.monkeybusiness.ProfileModel.Profile;
 import com.monkeybusiness.ProfileModel.ProfileService;
+import com.monkeybusiness.ProfileModel.udatajs;
 import com.monkeybusiness.ProfileRole.ProfileRoleService;
+
+class Schema
+{
+	Profile u;
+	boolean delete = false;
+}
+
+class UserBaseHandler
+{
+	private String UsersStatus = "";
+
+	
+	
+	private ArrayList al = new ArrayList();
+	
+	public String getUsersStatus() {
+		return UsersStatus;
+	}
+
+	public void setUsersStatus(String usersStatus) {
+		UsersStatus = usersStatus;
+	}
+
+	@Override
+	public String toString() {
+		return UsersStatus ;
+	}
+	
+	public ArrayList<Schema> getAl() {
+		return al;
+	}
+
+	public void generateUsers()
+	{
+		String value = UsersStatus;
+		
+		JSONParser jpar = new JSONParser();
+		
+		JSONArray jar = new JSONArray();
+		
+		try
+		{
+			jar = (JSONArray) jpar.parse(value);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		
+		System.out.println(jar);
+		
+		for( Object x:jar )
+		{
+			JSONObject jobj = (JSONObject) x;
+			
+			Profile u = new Profile();
+			
+			u.setID(Long.parseLong( jobj.get("ID").toString() ));
+			u.setEmail( jobj.get("Email").toString() );
+			u.setUsername( jobj.get("Username").toString() );
+			u.setPhone( jobj.get("Phone").toString() );
+			u.setLocation( jobj.get("Location").toString() );
+			u.setRole(Integer.parseInt( jobj.get("Role").toString() ));
+			
+			System.out.println(Boolean.parseBoolean( jobj.get("Active").toString() ));
+			u.setActive(Boolean.parseBoolean( jobj.get("Active").toString() ));
+			
+			u.setBasicInfo( jobj.get("BasicInfo").toString() );
+			u.setImage( jobj.get("Image").toString() );
+			u.setLoginStatus( Boolean.parseBoolean( jobj.get("LoginStatus").toString() ) );
+			
+			Schema s = new Schema();
+			
+			s.u = u;
+			
+			s.delete = Boolean.parseBoolean( jobj.get("Delete").toString() );
+			
+			al.add(s);
+			
+		}
+		
+	}
+
+	
+}
 
 @Controller
 public class MonkeyBusinessController {
@@ -227,53 +315,63 @@ public class MonkeyBusinessController {
 	public ModelAndView activities(@PathVariable("userName") String username,  HttpServletRequest request) throws IOException{
 		ModelAndView mav = new ModelAndView("activities");
 		
-		Profile p = ps.getProfile(username);
-    	
-		ArrayList<Profile> allProfiles = (ArrayList<Profile>)ps.getAllProfiles();
-		
 		JSONArray jarr = new JSONArray();
+		Profile p = ps.getProfile(username);
 		
-		System.out.println(username);
-		
-		for( Profile pe : allProfiles )
+		try
 		{
-			if( !pe.getUsername().equals(username) )
+			
+	    	
+			ArrayList<Profile> allProfiles = (ArrayList<Profile>)ps.getAllProfiles();
+			
+			
+			
+			System.out.println(username);
+			
+			for( Profile pe : allProfiles )
 			{
-				JSONObject jobj = new JSONObject();
-				
-				jobj.put("Name", pe.getUsername());
-				jobj.put("Online", pe.getLoginStatus());
-				jobj.put("Image", pe.getImage().replaceAll("\\\\", ""));
-				jobj.put("BasicInfo", pe.getBasicInfo());
-				
-				/*System.out.println( pe.getFriendList() );
-				System.out.println( p.getUsername() );
-				System.out.println( pe.getPendingFriendList() );
-				*/
-				
-				if( pe.getFriendList() != null && pe.getFriendList().contains(p.getUsername()) )
-					{
-						jobj.put("IsFriend", "Friends");
-					}
-					else if( pe.getPendingFriendList() != null && pe.getPendingFriendList().contains(p.getUsername()) )
-					{
-						jobj.put("IsFriend", "Friend Request Pending");
-					}
-					else if( p.getPendingFriendList() != null && p.getPendingFriendList().contains(pe.getUsername()) )
-					{
-						jobj.put("IsFriend", "Confirm Request");
-					}
-					else
-					{
-						jobj.put("IsFriend", "Add Friend");
-					}
-								System.out.println(jobj);
-				
-				jarr.add(jobj);
-			} 
+				if( !pe.getUsername().equals(username) )
+				{
+					JSONObject jobj = new JSONObject();
+					
+					jobj.put("Name", pe.getUsername());
+					jobj.put("Online", pe.getLoginStatus());
+					jobj.put("Image", pe.getImage().replaceAll("\\\\", ""));
+					jobj.put("BasicInfo", pe.getBasicInfo());
+					
+					/*System.out.println( pe.getFriendList() );
+					System.out.println( p.getUsername() );
+					System.out.println( pe.getPendingFriendList() );
+					*/
+					
+					if( pe.getFriendList() != null && pe.getFriendList().contains(p.getUsername()) )
+						{
+							jobj.put("IsFriend", "Friends");
+						}
+						else if( pe.getPendingFriendList() != null && pe.getPendingFriendList().contains(p.getUsername()) )
+						{
+							jobj.put("IsFriend", "Friend Request Pending");
+						}
+						else if( p.getPendingFriendList() != null && p.getPendingFriendList().contains(pe.getUsername()) )
+						{
+							jobj.put("IsFriend", "Confirm Request");
+						}
+						else
+						{
+							jobj.put("IsFriend", "Add Friend");
+						}
+									System.out.println(jobj);
+					
+					jarr.add(jobj);
+				} 
+			}
+			
+			System.out.println(jarr);
 		}
-		
-		System.out.println(jarr);
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		
 		mav.addObject("dataValue", p);
 	    mav.addObject("userName", username);
@@ -445,5 +543,103 @@ public class MonkeyBusinessController {
 		//mav.addObject("addProfile", new Profile());
 		
 		return mav;
+	}
+	
+	private String getAllUsers()
+	{
+		ArrayList<Profile> li = (ArrayList<Profile>)ps.getAllProfiles(); 
+		udatajs dj = new udatajs();
+		
+		for( Object x : li )
+		{
+			dj.addUser((Profile)x);
+			//System.out.println(x);
+		}
+		
+		System.out.println(dj);
+		
+		return dj.toString();
+	}
+	
+	@RequestMapping(value="/userbase" , method = RequestMethod.GET)
+	public ModelAndView userbase() throws IOException{
+		
+		ModelAndView mav = new ModelAndView("userbase");
+		
+		mav.addObject("viewUser", new Profile() );
+		mav.addObject("dataValue", getAllUsers());
+		mav.addObject("updateUsers", new UserBaseHandler() );
+		
+		return mav ;
+	}
+	
+	@RequestMapping(value="/UpdateUsers" , method = RequestMethod.POST)
+	public ModelAndView updateUsers(
+					@ModelAttribute("updateUsers")UserBaseHandler u, 
+					BindingResult bind
+			   ) throws IOException{
+		
+		ModelAndView mav = new ModelAndView("userbase");
+		
+		System.out.println(u);
+		
+		try
+		{
+			u.generateUsers();
+			
+			ArrayList<Schema> al = u.getAl();
+			
+			if( al != null )
+			{
+				for( Schema s : al )
+				{
+					Profile temp = ps.getProfile( s.u.getUsername() );
+					
+					s.u.setPassword(temp.getPassword());
+					s.u.setBlogs(temp.getBlogs());
+					s.u.setChatHistory(temp.getChatHistory());
+					s.u.setForums(temp.getForums());
+					s.u.setFriendList(temp.getFriendList());
+					s.u.setGallery(temp.getGallery());
+					s.u.setGender(temp.getGender());
+					s.u.setLoginStatus(temp.getLoginStatus());
+					s.u.setNotifications(temp.getNotifications());
+					s.u.setPendingFriendList(temp.getPendingFriendList());
+					s.u.setPhone(temp.getPhone());
+					s.u.setUsername(temp.getUsername());
+					
+					if( s.delete )
+						ps.deleteProfile( s.u.getID());
+					else
+						ps.updateProfile(s.u);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		
+		mav.addObject("viewUser", new Profile() );
+		mav.addObject("dataValue", getAllUsers());
+		mav.addObject("updateUsers", new UserBaseHandler() );
+		
+		return mav ;
+	}
+	
+	@RequestMapping(value="/head" , method = RequestMethod.GET)
+	public ModelAndView headGet(HttpServletRequest request) throws IOException{
+		
+		ModelAndView mav = new ModelAndView("head");
+		
+		if (request.isUserInRole("ADMIN")) {
+			
+			System.out.println("ADMIN");
+			
+	        mav.addObject("ADMIN", "ADMIN");
+	    }
+		
+		return mav ;
 	}
 }

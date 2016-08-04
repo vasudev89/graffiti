@@ -158,7 +158,7 @@
 		
 		for( i = 0 ; i < $scope.data.Gallery.length ; i++ )
 		{
-			var json = { "ImageUrl" : $scope.data.Gallery[i] , "del" : false };
+			var json = { "ImageUrl" : $scope.data.Gallery[i] , "del" : false , "counter" : i };
 			
 			$scope.data.Gallery[i] = json;
 		}
@@ -213,7 +213,7 @@
             				
             				for( i = 0 ; i < $scope.data.Gallery.length ; i++ )
             				{
-            					var json = { "ImageUrl" : $scope.data.Gallery[i] , "del" : false };
+            					var json = { "ImageUrl" : $scope.data.Gallery[i] , "del" : false , "counter" : i };
             					
             					$scope.data.Gallery[i] = json;
             				}
@@ -386,7 +386,7 @@
             				
             				for( i = 0 ; i < $scope.data.Gallery.length ; i++ )
             				{
-            					var json = { "ImageUrl" : $scope.data.Gallery[i] , "del" : false };
+            					var json = { "ImageUrl" : $scope.data.Gallery[i] , "del" : false , "counter" : i };
             					
             					$scope.data.Gallery[i] = json;
             				}
@@ -416,14 +416,57 @@
 			$scope.UpdatePageSize();
         }
      		
+        $scope.CloseGallery = function()
+        {
+        	$("#picturegallery").css({"visibility":"hidden"});
+        }
         
+        $scope.imagecounter = 0;
+        
+        $scope.LoadImage = function(image)
+        {
+        	$scope.imagecounter = image;
+        	
+        	$("#picturegallery").css({"visibility":"visible"});
+        	document.getElementById("currentImage").src = "${pageContext.request.contextPath}/" + $scope.data.Gallery[image].ImageUrl;
+        }
+        
+        $scope.MoveLeft = function(image)
+        {
+        	try
+        	{
+        		if( $scope.imagecounter > 0 )
+        			$scope.imagecounter -= 1;
+            	
+            	document.getElementById("currentImage").src = "${pageContext.request.contextPath}/" + $scope.data.Gallery[$scope.imagecounter].ImageUrl;
+        	}
+        	catch(e)
+        	{
+        		
+        	}
+        }
+        
+        $scope.MoveRight = function(image)
+        {
+        	try
+        	{
+        		if( $scope.imagecounter < $scope.data.Gallery.length-1 )
+        			$scope.imagecounter += 1;
+            	
+            	document.getElementById("currentImage").src = "${pageContext.request.contextPath}/" + $scope.data.Gallery[$scope.imagecounter].ImageUrl;
+        	}
+        	catch(e)
+        	{
+        		
+        	}
+        }
 	}]);
 	
 	
 </script>
 
 <!--  -->
-<c:import url="head.jsp"></c:import>
+<c:import url="/head"/>
 
 <body onload='resizing();onLoad()' ng-app="myApp" ng-controller='myCtrl'>
 
@@ -558,11 +601,17 @@
 									  	<input type="button" ng-click="Delete()" value="Delete" class="btn btn-danger" ng-disabled="stateDisabled" />
 									  	<br>
 									  	<br>
+									  	
+									  	<label style="font: 16px Calibri; font-variant: small-caps; font-style: oblique;">Total Files: {{data.Gallery.length}}</label>
+									  	
+									  	<br>
+									  	<br>
+									  	
 									</div>
 								
 								<span ng-repeat="y in data.Gallery track by $index" style="margin: auto; width: 85%;">
 								  	
-								  	<img src="${pageContext.request.contextPath}/{{y.ImageUrl}}" class="img img-thumbnail img-responsive" width="220px" style="margin: 5px;"></img>
+								  	<img src="${pageContext.request.contextPath}/{{y.ImageUrl}}" ng-click="LoadImage(y.counter)" class="img img-thumbnail img-responsive" width="220px" style="margin: 5px;"></img>
 									<input type="checkbox" value="" ng-model="y.del" ng-show="(currentUser == data.Username)" />
 									
 								</span>
@@ -585,6 +634,31 @@
 		
 		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/resizebody.js"></script>
 	</div>
+	</div>
+	
+	<div id="picturegallery" class="image-display-div">
+	
+		<div style="position: absolute; top: 10%; left: 10%;">
+			<label style="font: 16px Calibri; font-variant: small-caps; font-style: oblique; color: #FFFFFF; ">Total Files: {{data.Gallery.length}}</label>
+			<br>
+			<label style="font: 16px Calibri; font-variant: small-caps; font-style: oblique; color: #FFFFFF; ">Current File: {{(imagecounter+1)}}</label>
+		</div>
+		
+	
+		<button class="btn btn-danger" ng-click="CloseGallery()" style="position: absolute; top: 10%; right: 10%;" > X </button>
+	
+		<button class="btn btn-success" style="position: absolute; top: 40%; left: 10%;" ng-click="MoveLeft(imagecounter)" > < </button>
+		<button class="btn btn-success" style="position: absolute; top: 40%; right: 10%;" ng-click="MoveRight(imagecounter)" > > </button>
+	
+		<div style="margin: auto; width: 50%;">
+			<br>
+			<br>
+			<br>
+			<img id="currentImage" class="img img-thumbnail img-responsive" width="100%" ></img>
+			<br>
+			<br>
+		</div>
+		
 	</div>
 </body>
 </html>

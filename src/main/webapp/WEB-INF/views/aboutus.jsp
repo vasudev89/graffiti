@@ -19,7 +19,7 @@
 </head>
 <body onload='onLoad()'>
 
-	<c:import url="head.jsp"></c:import>
+	<c:import url="/head"/>
 
 	<div class="body">
 	

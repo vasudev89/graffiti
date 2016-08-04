@@ -280,6 +280,9 @@
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/blog/${pageContext.request.userPrincipal.name}">Blog</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/forum/${pageContext.request.userPrincipal.name}">Forum</a></li>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/gallery/${pageContext.request.userPrincipal.name}">Gallery</a></li>
+				<c:if test="${not empty ADMIN}">
+					<li><a class="navigation-element" href="${pageContext.request.contextPath}/userbase">User Base</a></li>
+				</c:if>
 				<li><a class="navigation-element" href="${pageContext.request.contextPath}/ulogout">Log Out</a></li>
 				
 			</c:otherwise>
